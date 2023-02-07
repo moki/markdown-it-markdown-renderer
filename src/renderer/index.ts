@@ -15,11 +15,14 @@ class MarkdownRenderer extends Renderer {
         const rules = Object.assign({}, MarkdownRenderer.defaultRules, customRules);
 
         for (const [name, handler] of Object.entries(rules)) {
-            this.rules[name] = handler;
+            if (!handler) {
+                continue;
+            }
+
+            this.rules[name] = handler.bind(this);
         }
     }
 }
 
 export {MarkdownRenderer};
-
 export default {MarkdownRenderer};
