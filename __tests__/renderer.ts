@@ -38,10 +38,19 @@ describe('MarkdownRenderer', () => {
 
         const renderer = new MarkdownRenderer({customRules});
 
-        expect(renderer.rules.heading_open).toEqual(customRules.heading_open);
+        const leftCustom = JSON.stringify(renderer.rules.heading_open);
+        const rightCustom = JSON.stringify(customRules.heading_open.bind(renderer));
+
+        expect(leftCustom).toEqual(rightCustom);
     });
 
     it('preserves default rules if not overwritten', () => {
+        const customRules = {
+            heading_open: function () {
+                return '';
+            },
+        };
+
         const defaultRules = {
             heading_close: function () {
                 return '';
@@ -50,16 +59,15 @@ describe('MarkdownRenderer', () => {
 
         MarkdownRenderer.defaultRules = defaultRules;
 
-        const customRules = {
-            heading_open: function () {
-                return '';
-            },
-        };
-
         const renderer = new MarkdownRenderer({customRules});
 
-        expect(renderer.rules.heading_open).toEqual(customRules.heading_open);
-        expect(renderer.rules.heading_close).toEqual(defaultRules.heading_close);
+        const leftCustom = JSON.stringify(renderer.rules.heading_open);
+        const rightCustom = JSON.stringify(customRules.heading_open.bind(renderer));
+        expect(leftCustom).toEqual(rightCustom);
+
+        const leftOriginal = JSON.stringify(renderer.rules.heading_close);
+        const rightOriginal = JSON.stringify(defaultRules.heading_close.bind(renderer));
+        expect(leftOriginal).toEqual(rightOriginal);
     });
 });
 
