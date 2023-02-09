@@ -9,7 +9,7 @@ describe('softbreak', () => {
         expect(handler).toBeTruthy();
     });
 
-    it('renders newline', () => {
+    it('returns newline', () => {
         const renderer = new MarkdownRenderer();
 
         let handler = softbreak.softbreak;
@@ -24,5 +24,15 @@ describe('softbreak', () => {
         const actual = handler([{type: 'softbreak'}] as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
+    });
+
+    it('renders newline', () => {
+        const renderer = new MarkdownRenderer({customRules: {...softbreak}});
+
+        const tokens = [{type: 'softbreak'}] as Token[];
+        const actual = renderer.render(tokens, {}, {});
+        const expected = '\n';
+
+        expect(actual).toEqual(expected);
     });
 });
