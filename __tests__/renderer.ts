@@ -1,5 +1,5 @@
 import Renderer from 'markdown-it/lib/renderer';
-import {MarkdownRenderer} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererMode} from 'src/renderer';
 
 describe('MarkdownRenderer', () => {
     it('is instance of the MarkdownIt Renderer', () => {
@@ -68,6 +68,28 @@ describe('MarkdownRenderer', () => {
         const leftOriginal = JSON.stringify(renderer.rules.heading_close);
         const rightOriginal = JSON.stringify(defaultRules.heading_close.bind(renderer));
         expect(leftOriginal).toEqual(rightOriginal);
+    });
+});
+
+describe('MarkdownRenderer modes', () => {
+    it('by default instantiated in production mode', () => {
+        const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Production});
+
+        expect(renderer['mode'] === MarkdownRendererMode.Production);
+    });
+
+    it('can be instantiated in development(debug) mode', () => {
+        const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Development});
+
+        expect(renderer['mode'] === MarkdownRendererMode.Development);
+    });
+
+    it('debug mode extends rules with logging capabilities', () => {
+        const spyRuleWithDebug = jest.spyOn(MarkdownRenderer, 'ruleWithDebug');
+
+        new MarkdownRenderer({mode: MarkdownRendererMode.Development}) as unknown;
+
+        expect(spyRuleWithDebug).toHaveBeenCalled();
     });
 });
 
