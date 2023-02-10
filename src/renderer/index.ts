@@ -31,6 +31,7 @@ class MarkdownRenderer extends Renderer {
         };
     }
 
+    protected context: Token[];
     private mode: MarkdownRendererMode;
 
     constructor(params: MarkdownRendererParams = {}) {
@@ -42,6 +43,8 @@ class MarkdownRenderer extends Renderer {
         if (this.mode === MarkdownRendererMode.Development) {
             console.debug(`${this.constructor.name}: instantiated in the debug mode`);
         }
+
+        this.context = [];
 
         this.setRules({...MarkdownRenderer.defaultRules, ...customRules});
     }
