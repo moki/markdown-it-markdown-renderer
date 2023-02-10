@@ -101,6 +101,24 @@ describe('link', () => {
         expect(actual).toStrictEqual(expected);
     });
 
+    it('renders link with \' as title markup if title contains "', () => {
+        const href = 'folder/file.md';
+        const title = 'he said: "quote inside"';
+        const open = new Token('link_open', '', 0);
+        open.attrSet('href', href);
+        open.attrSet('title', title);
+
+        const close = new Token('link_close', '', 0);
+        const tokens = [open, close];
+
+        const renderer = new MarkdownRenderer({customRules: {...link}});
+
+        const expected = `[](${href} '${title}')`;
+        const actual = renderer.render(tokens, {}, {});
+
+        expect(actual).toStrictEqual(expected);
+    });
+
     it('renders link with href', () => {
         const href = 'folder/file.md';
         const open = new Token('link_open', '', 0);
