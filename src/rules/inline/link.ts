@@ -21,15 +21,15 @@ const link: Renderer.RenderRuleRecord = {
             rendered += href;
         }
 
-        let title = openToken.attrGet('title');
+        const title = openToken.attrGet('title');
         if (title?.length) {
             if (href?.length) {
                 rendered += ' ';
             }
 
-            title = title.replace(/"/gmu, "'");
+            const markup = title.indexOf('"') === -1 ? '"' : "'";
 
-            rendered += `"${title}"`;
+            rendered += `${markup}${title}${markup}`;
         }
 
         rendered += ')';
