@@ -4,24 +4,24 @@ import Token from 'markdown-it/lib/token';
 
 const link: Renderer.RenderRuleRecord = {
     link_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
-        this.context.push(tokens[i]);
+        this.pending.push(tokens[i]);
 
         return '[';
     },
     link_close: function (this: MarkdownRenderer) {
-        const openToken = this.context.pop();
-        if (openToken?.type !== 'link_open') {
+        const token = this.pending.pop();
+        if (token?.type !== 'link_open') {
             throw new Error('failed to render link token');
         }
 
         let rendered = '](';
 
-        const href = openToken.attrGet('href');
+        const href = token.attrGet('href');
         if (href?.length) {
             rendered += href;
         }
 
-        const title = openToken.attrGet('title');
+        const title = token.attrGet('title');
         if (title?.length) {
             if (href?.length) {
                 rendered += ' ';
