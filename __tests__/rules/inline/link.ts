@@ -22,13 +22,14 @@ describe('link_open', () => {
 
         const open = new Token('link_open', '', 0);
         const tokens = [open] as Token[];
+
         const expected = `[`;
         const actual = handler(tokens, 0, {}, {}, renderer);
 
         expect(actual).toStrictEqual(expected);
     });
 
-    it('puts link_open token onto context stack', () => {
+    it('puts link_open token onto pending stack', () => {
         const renderer = new MarkdownRenderer({customRules: {...link}});
 
         let handler = link.link_open;
@@ -43,8 +44,30 @@ describe('link_open', () => {
 
         handler(tokens, 0, {}, {}, renderer);
 
-        const lastContext = renderer['context'].pop();
-        expect(lastContext).toStrictEqual(open);
+        const pending = renderer['pending'].pop();
+        expect(pending).toStrictEqual(open);
+    });
+
+    it('takes link_open token from pending stack when handling link_close', () => {
+        const renderer = new MarkdownRenderer({customRules: {...link}});
+
+        let handler = link.link_close;
+        if (!handler) {
+            throw new Error('link_open rule is not implemented');
+        }
+
+        handler = handler.bind(renderer);
+
+        const open = new Token('link_open', '', 0);
+
+        renderer['pending'].push(open);
+
+        const close = new Token('link_close', '', 0);
+        const tokens = [close] as Token[];
+
+        handler(tokens, 0, {}, {}, renderer);
+
+        expect(renderer['pending']).toHaveLength(0);
     });
 });
 
@@ -68,12 +91,13 @@ describe('link_close', () => {
         const href = 'folder/file.md';
         const title = 'cool file';
         const open = new Token('link_open', '', 0);
-        const expected = `](${href} "${title}")`;
 
         open.attrSet('href', href);
         open.attrSet('title', title);
 
-        renderer['context'].push(open);
+        const expected = `](${href} "${title}")`;
+
+        renderer['pending'].push(open);
 
         const close = new Token('link_close', '', 0);
         const tokens = [close] as Token[];
