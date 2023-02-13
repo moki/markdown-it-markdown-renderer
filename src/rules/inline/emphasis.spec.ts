@@ -1,7 +1,12 @@
+import {equals} from '../../../__tests__/utils';
+
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
 import {emphasis} from 'src/rules/inline/emphasis';
+
+equals('emphasis', '*text*');
+equals('strong', '**text**');
 
 describe('em_open', () => {
     it('is named em_open', () => {

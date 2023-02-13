@@ -1,7 +1,11 @@
+import {equals} from '../../../__tests__/utils';
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
 import {image} from 'src/rules/inline/image';
+
+equals('image', '![title](./image.png)');
+equals('empty image', '![]()');
 
 describe('image', () => {
     it('is named image', () => {

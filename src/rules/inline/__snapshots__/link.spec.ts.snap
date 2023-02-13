@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`html equals for empty link: HTML 1`] = `
+"<p><a href=\\"\\"></a></p>
+"
+`;
+
+exports[`html equals for empty link: MD 1`] = `"[]()"`;
+
+exports[`html equals for link: HTML 1`] = `
+"<p><a href=\\"./link\\">title</a></p>
+"
+`;
+
+exports[`html equals for link: MD 1`] = `"[title](./link)"`;

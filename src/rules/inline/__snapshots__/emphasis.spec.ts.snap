@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`html equals for emphasis: HTML 1`] = `
+"<p><em>text</em></p>
+"
+`;
+
+exports[`html equals for emphasis: MD 1`] = `"*text*"`;
+
+exports[`html equals for strong: HTML 1`] = `
+"<p><strong>text</strong></p>
+"
+`;
+
+exports[`html equals for strong: MD 1`] = `"**text**"`;

@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`code_inline html equals for inline code: HTML 1`] = `
+"<p><code>console.log(&quot;text&quot;);</code></p>
+"
+`;
+
+exports[`code_inline html equals for inline code: MD 1`] = `"\`\`\`console.log(\\"text\\");\`\`\`"`;

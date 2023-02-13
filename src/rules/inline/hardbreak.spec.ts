@@ -1,9 +1,14 @@
+import {equals} from '../../../__tests__/utils';
+
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
 import {hardbreak} from 'src/rules/inline/hardbreak';
 
 describe('hardbreak', () => {
+    // TODO: unexpected snapshot
+    equals('hardbreak', '\n\n');
+
     it('is named hardbreak', () => {
         const handler = hardbreak.hardbreak;
         expect(handler).toBeTruthy();

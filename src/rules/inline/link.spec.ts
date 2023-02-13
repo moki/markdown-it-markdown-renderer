@@ -1,7 +1,11 @@
+import {equals} from '../../../__tests__/utils';
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
 import {link} from 'src/rules/inline/link';
+
+equals('link', '[title](./link)');
+equals('empty link', '[]()');
 
 describe('link_open', () => {
     it('is named link_open', () => {

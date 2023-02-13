@@ -1,9 +1,13 @@
+import {equals} from '../../../__tests__/utils';
+
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
 import {code} from 'src/rules/inline/code';
 
 describe('code_inline', () => {
+    equals('inline code', '```console.log("text");```');
+
     it('is named code_inline', () => {
         const handler = code.code_inline;
 
