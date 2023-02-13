@@ -2,6 +2,8 @@ import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 import {Options} from 'markdown-it';
 
+import {inline} from 'src/rules/inline';
+
 export type MarkdownRendererParams = {
     customRules?: Renderer.RenderRuleRecord;
     mode?: MarkdownRendererMode;
@@ -13,7 +15,7 @@ export enum MarkdownRendererMode {
 }
 
 class MarkdownRenderer extends Renderer {
-    static defaultRules: Renderer.RenderRuleRecord = {};
+    static defaultRules: Renderer.RenderRuleRecord = {...inline};
 
     static ruleWithDebug(name: string, handler: Renderer.RenderRule) {
         const modeMsg = (argsStr: string) =>
