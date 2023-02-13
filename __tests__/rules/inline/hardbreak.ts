@@ -9,7 +9,7 @@ describe('hardbreak', () => {
         expect(handler).toBeTruthy();
     });
 
-    it('returns newline', () => {
+    it('returns backslash followed by new line', () => {
         const renderer = new MarkdownRenderer();
 
         let handler = hardbreak.hardbreak;
@@ -19,18 +19,18 @@ describe('hardbreak', () => {
 
         handler = handler.bind(renderer);
 
-        const expected = '\n';
+        const expected = '\\\n';
         const actual = handler([{type: 'hardbreak'}] as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
     });
 
-    it('renders newline', () => {
+    it('renders backslash followed by newline', () => {
         const renderer = new MarkdownRenderer({customRules: {...hardbreak}});
 
         const tokens = [{type: 'hardbreak'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
-        const expected = '\n';
+        const expected = '\\\n';
 
         expect(actual).toEqual(expected);
     });
