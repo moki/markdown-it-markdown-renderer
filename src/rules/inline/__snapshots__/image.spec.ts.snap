@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`html equals for empty image: HTML 1`] = `
+"<p><img src=\\"\\" alt=\\"\\"></p>
+"
+`;
+
+exports[`html equals for empty image: MD 1`] = `"![]()"`;
+
+exports[`html equals for image: HTML 1`] = `
+"<p><img src=\\"./image.png\\" alt=\\"title\\"></p>
+"
+`;
+
+exports[`html equals for image: MD 1`] = `"![title](./image.png)"`;

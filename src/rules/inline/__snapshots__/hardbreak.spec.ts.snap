@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hardbreak html equals for hardbreak: HTML 1`] = `""`;
+
+exports[`hardbreak html equals for hardbreak: MD 1`] = `""`;
