@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
     // preset: 'ts-jest',
@@ -8,4 +10,5 @@ module.exports = {
     moduleNameMapper: {
         '^src/(.*)': '<rootDir>/src/$1',
     },
+    testPathIgnorePatterns: [`.*__fixtures__${path.sep}.*`],
 };
