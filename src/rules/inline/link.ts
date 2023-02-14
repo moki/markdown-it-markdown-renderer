@@ -6,12 +6,16 @@ const link: Renderer.RenderRuleRecord = {
     link_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         this.pending.push(tokens[i]);
 
-        return '[';
+        return tokens[i].markup === 'autolink' ? '<' : '[';
     },
     link_close: function (this: MarkdownRenderer) {
         const token = this.pending.pop();
         if (token?.type !== 'link_open') {
             throw new Error('failed to render link token');
+        }
+
+        if (token.markup === 'autolink') {
+            return (token.href ?? '') + '>';
         }
 
         let rendered = '](';
