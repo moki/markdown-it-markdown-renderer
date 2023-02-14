@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown zero diff inline autolink 1`] = `"<https://z0r.de/1729>"`;
+
+exports[`markdown zero diff inline autolink empty 1`] = `"<>"`;
+
+exports[`markdown zero diff inline code 1`] = `"\`console.log(\\"hello\\");\`"`;
+
+exports[`markdown zero diff inline code empty 1`] = `"\`\`"`;
+
+exports[`markdown zero diff inline code with text 1`] = `"Sentence with \`console.log(\\"hello\\");\` code inside of it"`;
+
+exports[`markdown zero diff inline emphasis 1`] = `"*italics*"`;
+
+exports[`markdown zero diff inline emphasis empty 1`] = `"**"`;
+
+exports[`markdown zero diff inline hardbreak 1`] = `
+"some line\\\\
+next line"
+`;
+
+exports[`markdown zero diff inline image empty 1`] = `"![]()"`;
+
+exports[`markdown zero diff inline image label 1`] = `"![diplo]()"`;
+
+exports[`markdown zero diff inline image label src 1`] = `"![diplo](logo/diplo.png)"`;
+
+exports[`markdown zero diff inline image label src title 1`] = `"![diplo](logo/diplo.png \\"diplodoc\\")"`;
+
+exports[`markdown zero diff inline link empty 1`] = `"[]()"`;
+
+exports[`markdown zero diff inline link label 1`] = `"[text]()"`;
+
+exports[`markdown zero diff inline link label href 1`] = `"[text](folder/file.md)"`;
+
+exports[`markdown zero diff inline link label href title 1`] = `"[text](folder/file.md \\"title\\")"`;
+
+exports[`markdown zero diff inline link label href title with " inside 1`] = `"[text](folder/file.md 'title: \\"quote\\"')"`;
+
+exports[`markdown zero diff inline softbreak 1`] = `
+"some line
+next line"
+`;
+
+exports[`markdown zero diff inline strong emphasis + emphasis 1`] = `"***bold italics***"`;
+
+exports[`markdown zero diff inline strong emphasis 1`] = `"**bold**"`;
+
+exports[`markdown zero diff inline text 1`] = `"line of text"`;
+
+exports[`markdown zero diff inline text empty 1`] = `""`;
