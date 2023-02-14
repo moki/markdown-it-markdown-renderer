@@ -19,7 +19,13 @@ exports[`markdown zero diff inline hardbreak 1`] = `
 next line"
 `;
 
+exports[`markdown zero diff inline image bold italics label 1`] = `"![***diplo***]()"`;
+
+exports[`markdown zero diff inline image bold label 1`] = `"![**diplo**]()"`;
+
 exports[`markdown zero diff inline image empty 1`] = `"![]()"`;
+
+exports[`markdown zero diff inline image italics label 1`] = `"![*diplo*]()"`;
 
 exports[`markdown zero diff inline image label 1`] = `"![diplo]()"`;
 
@@ -27,7 +33,13 @@ exports[`markdown zero diff inline image label src 1`] = `"![diplo](logo/diplo.p
 
 exports[`markdown zero diff inline image label src title 1`] = `"![diplo](logo/diplo.png \\"diplodoc\\")"`;
 
+exports[`markdown zero diff inline link bold italics label 1`] = `"[***text***]()"`;
+
+exports[`markdown zero diff inline link bold label 1`] = `"[**text**]()"`;
+
 exports[`markdown zero diff inline link empty 1`] = `"[]()"`;
+
+exports[`markdown zero diff inline link italics label 1`] = `"[*text*]()"`;
 
 exports[`markdown zero diff inline link label 1`] = `"[text]()"`;
 
