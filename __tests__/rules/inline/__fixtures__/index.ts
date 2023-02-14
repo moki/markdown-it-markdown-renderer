@@ -82,6 +82,21 @@ const fixtures: SpecEntry[] = [
     },
     {
         section: 'inline',
+        example: 'link bold label',
+        markdown: '[**text**]()',
+    },
+    {
+        section: 'inline',
+        example: 'link italics label',
+        markdown: '[*text*]()',
+    },
+    {
+        section: 'inline',
+        example: 'link bold italics label',
+        markdown: '[***text***]()',
+    },
+    {
+        section: 'inline',
         example: 'link empty',
         markdown: '[]()',
     },
@@ -110,6 +125,21 @@ const fixtures: SpecEntry[] = [
         section: 'inline',
         example: 'image label',
         markdown: '![diplo]()',
+    },
+    {
+        section: 'inline',
+        example: 'image bold label',
+        markdown: '![**diplo**]()',
+    },
+    {
+        section: 'inline',
+        example: 'image italics label',
+        markdown: '![*diplo*]()',
+    },
+    {
+        section: 'inline',
+        example: 'image bold italics label',
+        markdown: '![***diplo***]()',
     },
     {
         section: 'inline',
