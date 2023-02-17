@@ -15,7 +15,12 @@ const link: Renderer.RenderRuleRecord = {
         }
 
         if (token.markup === 'autolink') {
-            return (token.href ?? '') + '>';
+            const href = token.attrGet('href');
+            if (!href?.length) {
+                throw new Error('failed to render autolink token');
+            }
+
+            return '>';
         }
 
         let rendered = '](';
