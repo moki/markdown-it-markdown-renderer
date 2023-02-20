@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import {MarkdownRenderer} from 'src/renderer';
 
-import {fixtures} from './__fixtures__';
+import {fixtures, SpecEntry} from './__fixtures__';
 
 // paragraph mock
 // test cases are inline, we are not concerned with block content here
