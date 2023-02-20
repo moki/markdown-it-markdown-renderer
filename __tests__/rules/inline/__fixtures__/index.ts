@@ -1,150 +1,173 @@
-export type SpecEntry = {
-    section: string;
-    example: string;
-    markdown: string;
-};
+import type {CommonMarkSpecEntry} from '../../__fixtures__';
 
-const fixtures: SpecEntry[] = [
+const fixtures: CommonMarkSpecEntry[] = [
     {
         section: 'inline',
-        example: 'text',
+        number: 'text',
         markdown: 'line of text',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'text empty',
+        number: 'text empty',
         markdown: '',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'emphasis',
+        number: 'emphasis',
         markdown: '*italics*',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'emphasis empty',
+        number: 'emphasis empty',
         markdown: '**',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'strong emphasis',
+        number: 'strong emphasis',
         markdown: '**bold**',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'strong emphasis + emphasis',
+        number: 'strong emphasis + emphasis',
         markdown: '***bold italics***',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'softbreak',
+        number: 'softbreak',
         markdown: 'some line\nnext line',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'hardbreak',
+        number: 'hardbreak',
         markdown: 'some line\\\nnext line',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'code',
+        number: 'code',
         markdown: '`console.log("hello");`',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'code with text',
+        number: 'code with text',
         markdown: 'Sentence with `console.log("hello");` code inside of it',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'code empty',
+        number: 'code empty',
         markdown: '``',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link label href title',
+        number: 'link label href title',
         markdown: '[text](folder/file.md "title")',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link label href title with " inside',
+        number: 'link label href title with " inside',
         markdown: '[text](folder/file.md \'title: "quote"\')',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link label href',
+        number: 'link label href',
         markdown: '[text](folder/file.md)',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link label',
+        number: 'link label',
         markdown: '[text]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link bold label',
+        number: 'link bold label',
         markdown: '[**text**]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link italics label',
+        number: 'link italics label',
         markdown: '[*text*]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link bold italics label',
+        number: 'link bold italics label',
         markdown: '[***text***]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'link empty',
+        number: 'link empty',
         markdown: '[]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'autolink',
+        number: 'autolink',
         markdown: '<https://z0r.de/1729>',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'autolink empty',
+        number: 'autolink empty',
         markdown: '<>',
+        html: '',
     },
-
     {
         section: 'inline',
-        example: 'image label src title',
+        number: 'image label src title',
         markdown: '![diplo](logo/diplo.png "diplodoc")',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image label src',
+        number: 'image label src',
         markdown: '![diplo](logo/diplo.png)',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image label',
+        number: 'image label',
         markdown: '![diplo]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image bold label',
+        number: 'image bold label',
         markdown: '![**diplo**]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image italics label',
+        number: 'image italics label',
         markdown: '![*diplo*]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image bold italics label',
+        number: 'image bold italics label',
         markdown: '![***diplo***]()',
+        html: '',
     },
     {
         section: 'inline',
-        example: 'image empty',
+        number: 'image empty',
         markdown: '![]()',
+        html: '',
     },
 ];
 

@@ -1,7 +1,8 @@
 import MarkdownIt from 'markdown-it';
 import {MarkdownRenderer} from 'src/renderer';
 
-import {fixtures, SpecEntry} from './__fixtures__';
+import {CommonMarkSpecEntry} from '../__fixtures__';
+import {fixtures} from './__fixtures__';
 
 // paragraph mock
 // test cases are inline, we are not concerned with block content here
@@ -18,10 +19,10 @@ const md = new MarkdownIt('commonmark');
 md.renderer = renderer;
 
 describe('markdown zero diff', () => {
-    fixtures.forEach((entry: SpecEntry) => {
-        const {section, example, markdown} = entry;
+    fixtures.forEach((entry: CommonMarkSpecEntry) => {
+        const {section, number, markdown} = entry;
 
-        const name = `${section} ${example}`;
+        const name = `${section} ${number}`;
 
         test(name, () => {
             const rendered = md.render(markdown);
