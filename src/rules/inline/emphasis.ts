@@ -1,15 +1,16 @@
 import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 
-const typeToSyntax = new Map([
-    ['em_open', '*'],
-    ['em_close', '*'],
-    ['strong_open', '**'],
-    ['strong_close', '**'],
-]);
+const rules = new Set(['em_open', 'em_close', 'strong_open', 'strong_close']);
 
 function basic(tokens: Token[], i: number) {
-    return typeToSyntax.get(tokens[i].type) ?? '';
+    const {type, markup} = tokens[i];
+
+    if (rules.has(type)) {
+        return markup;
+    }
+
+    throw new Error('failed to render emphasis');
 }
 
 const emphasis: Renderer.RenderRuleRecord = {
