@@ -21,7 +21,7 @@ describe('em_open', () => {
         handler = handler.bind(renderer);
 
         const expected = '*';
-        const tokens = [{type: 'em_open'}];
+        const tokens = [{type: 'em_open', markup: '*'}];
         const actual = handler(tokens as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
@@ -31,7 +31,7 @@ describe('em_open', () => {
         const renderer = new MarkdownRenderer({customRules: {...emphasis}});
 
         const expected = '*';
-        const tokens = [{type: 'em_open'}] as Token[];
+        const tokens = [{type: 'em_open', markup: '*'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
 
         expect(actual).toEqual(expected);
@@ -56,7 +56,7 @@ describe('em_close', () => {
         handler = handler.bind(renderer);
 
         const expected = '*';
-        const tokens = [{type: 'em_close'}];
+        const tokens = [{type: 'em_close', markup: '*'}];
         const actual = handler(tokens as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
@@ -66,7 +66,7 @@ describe('em_close', () => {
         const renderer = new MarkdownRenderer({customRules: {...emphasis}});
 
         const expected = '*';
-        const tokens = [{type: 'em_close'}] as Token[];
+        const tokens = [{type: 'em_close', markup: '*'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
 
         expect(actual).toEqual(expected);
@@ -91,7 +91,7 @@ describe('strong_open', () => {
         handler = handler.bind(renderer);
 
         const expected = '**';
-        const tokens = [{type: 'strong_open'}];
+        const tokens = [{type: 'strong_open', markup: '**'}];
         const actual = handler(tokens as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
@@ -101,7 +101,7 @@ describe('strong_open', () => {
         const renderer = new MarkdownRenderer({customRules: {...emphasis}});
 
         const expected = '**';
-        const tokens = [{type: 'strong_open'}] as Token[];
+        const tokens = [{type: 'strong_open', markup: '**'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
 
         expect(actual).toEqual(expected);
@@ -126,7 +126,7 @@ describe('strong_close', () => {
         handler = handler.bind(renderer);
 
         const expected = '**';
-        const tokens = [{type: 'strong_close'}];
+        const tokens = [{type: 'strong_close', markup: '**'}];
         const actual = handler(tokens as Token[], 0, {}, {}, renderer);
 
         expect(actual).toBe(expected);
@@ -136,7 +136,7 @@ describe('strong_close', () => {
         const renderer = new MarkdownRenderer({customRules: {...emphasis}});
 
         const expected = '**';
-        const tokens = [{type: 'strong_close'}] as Token[];
+        const tokens = [{type: 'strong_close', markup: '**'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
 
         expect(actual).toEqual(expected);
