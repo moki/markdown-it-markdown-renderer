@@ -48,6 +48,7 @@ const sectionsKeep = new Set([
     'Textual content',
     'Raw HTML',
     'Images',
+    'Thematic breaks',
 ]);
 
 const examplesOmit = new Set([
@@ -119,6 +120,18 @@ const examplesOmit = new Set([
     // 'Raw HTML',
     // paragraphs are not implemented
     626,
+
+    // 'Thematic breaks',
+    // lists are not implemented
+    57, 60, 61,
+    // headers are not implemented
+    59,
+    // paragraphs are not implemented
+    55, 58, 49,
+    // code indent blocks are not implemented
+    48,
+    // spaces consumed by the parser
+    47, 51, 52, 53, 54,
 ]);
 
 const units = tests.filter(({section, number}) => {
