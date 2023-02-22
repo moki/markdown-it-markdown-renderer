@@ -2,11 +2,16 @@ import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 import {Options} from 'markdown-it';
 
+import {NEW_LINE} from './constants';
+
 import {inline} from 'src/rules/inline';
 
 export type MarkdownRendererParams = {
     customRules?: Renderer.RenderRuleRecord;
     mode?: MarkdownRendererMode;
+    constants?: {
+        EOL?: string;
+    };
 };
 
 export enum MarkdownRendererMode {
@@ -33,13 +38,24 @@ class MarkdownRenderer extends Renderer {
         };
     }
 
+    // render pending tokens stack
     protected pending: Token[];
+
+    // constants
+    // end of line used by renderer
+    protected EOL: string;
+
+    // renderer mode
     private mode: MarkdownRendererMode;
 
     constructor(params: MarkdownRendererParams = {}) {
         super();
 
-        const {customRules = {}, mode = MarkdownRendererMode.Production} = params;
+        const {
+            customRules = {},
+            mode = MarkdownRendererMode.Production,
+            constants: {EOL = NEW_LINE} = {},
+        } = params;
 
         this.mode = mode;
         if (this.mode === MarkdownRendererMode.Development) {
@@ -47,6 +63,8 @@ class MarkdownRenderer extends Renderer {
         }
 
         this.pending = [];
+
+        this.EOL = EOL;
 
         this.setRules({...MarkdownRenderer.defaultRules, ...customRules});
     }
