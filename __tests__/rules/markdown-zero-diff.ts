@@ -41,6 +41,7 @@ const sectionsKeep = new Set([
     'Images',
     'Thematic breaks',
     'Paragraphs',
+    'ATX headings',
 ]);
 
 const examplesOmit = new Set([
@@ -134,6 +135,17 @@ const examplesOmit = new Set([
     225,
     // leading spaces are consumed by the parser
     222, 223,
+
+    // 'ATX headings'
+    // trailling spaces after heading open syntax are consumed by the parser
+    67,
+    // normalization into heading open syntax always having spacing after
+    // optional heading close syntax are consumed by the parser
+    79, 73, 72,
+    // optional indentation before heading open syntax consumed by the parser
+    71, 70, 68,
+    // test intended to fail
+    69,
 ]);
 
 const units = tests.filter(({section, number}) => {
