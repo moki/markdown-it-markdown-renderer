@@ -1,4 +1,5 @@
 const NEW_LINE = '\n';
+const ONE_SPACE = ' ';
 
-export {NEW_LINE};
-export default {NEW_LINE};
+export {NEW_LINE, ONE_SPACE};
+export default {NEW_LINE, ONE_SPACE};

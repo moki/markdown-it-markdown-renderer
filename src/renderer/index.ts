@@ -2,7 +2,7 @@ import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 import {Options} from 'markdown-it';
 
-import {NEW_LINE} from './constants';
+import {NEW_LINE, ONE_SPACE} from './constants';
 
 import {inline} from 'src/rules/inline';
 import {block} from 'src/rules/block';
@@ -12,6 +12,7 @@ export type MarkdownRendererParams = {
     mode?: MarkdownRendererMode;
     constants?: {
         EOL?: string;
+        SPACE?: string;
     };
 };
 
@@ -45,6 +46,8 @@ class MarkdownRenderer extends Renderer {
     // constants
     // end of line used by renderer
     protected EOL: string;
+    // space used by renderer
+    protected SPACE: string;
 
     // renderer mode
     private mode: MarkdownRendererMode;
@@ -55,7 +58,7 @@ class MarkdownRenderer extends Renderer {
         const {
             customRules = {},
             mode = MarkdownRendererMode.Production,
-            constants: {EOL = NEW_LINE} = {},
+            constants: {EOL = NEW_LINE, SPACE = ONE_SPACE} = {},
         } = params;
 
         this.mode = mode;
@@ -66,6 +69,7 @@ class MarkdownRenderer extends Renderer {
         this.pending = [];
 
         this.EOL = EOL;
+        this.SPACE = SPACE;
 
         this.setRules({...MarkdownRenderer.defaultRules, ...customRules});
     }
