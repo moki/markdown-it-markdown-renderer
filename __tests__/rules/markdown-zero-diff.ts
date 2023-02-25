@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it';
-import {MarkdownRenderer} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
 import {tests} from 'commonmark-spec';
 
 import {CommonMarkSpecEntry} from './__fixtures__';
@@ -42,6 +42,7 @@ const sectionsKeep = new Set([
     'Thematic breaks',
     'Paragraphs',
     'ATX headings',
+    'Setext headings',
 ]);
 
 const examplesOmit = new Set([
@@ -146,6 +147,20 @@ const examplesOmit = new Set([
     71, 70, 68,
     // test intended to fail
     69,
+
+    // 'Setext headings',
+    // leading, inside the markup, trailling  spaces are consumed by the parser
+    84, 87, 88, 89, 80, 83,
+    // spaces are consumed by the parser
+    105,
+    // indented code block are not implemented
+    85, 100,
+    // blockquotes not implemented
+    101, 93, 92,
+    // lists are not implemented
+    99, 94,
+    // intended to fail
+    104,
 ]);
 
 const units = tests.filter(({section, number}) => {
@@ -167,7 +182,9 @@ describe('markdown zero diff', () => {
         const name = `${section} ${number}`;
 
         test(name, () => {
-            const rendered = md.render(markdown);
+            // passing array of original markdown string split by new lines
+            const env: MarkdownRendererEnv = {source: markdown.split('\n')};
+            const rendered = md.render(markdown, env);
 
             expect(rendered.trim()).toStrictEqual(markdown.trim());
         });
