@@ -118,8 +118,9 @@ const examplesOmit = new Set([
     57, 60, 61,
     // headers are not implemented
     59,
-    // paragraphs are not implemented
-    55, 58, 49,
+    // leading spaces are consumed by the parser
+    49,
+
     // code indent blocks are not implemented
     48,
     // spaces consumed by the parser
