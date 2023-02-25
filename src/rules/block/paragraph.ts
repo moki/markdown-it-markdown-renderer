@@ -21,7 +21,18 @@ const paragraph: Renderer.RenderRuleRecord = {
             throw new Error('failed to rendrer paragraph');
         }
 
-        rendered += this.EOL.repeat(2);
+        if (!previous.block) {
+            return '';
+        }
+
+        // vertical blocks separation
+        if (previous.type === 'hr') {
+            // thematic breaks can interrupt paragraphs
+            // therefore empty line between it and paragraphs isn't required
+            rendered += this.EOL;
+        } else {
+            rendered += this.EOL.repeat(2);
+        }
 
         return rendered;
     },
