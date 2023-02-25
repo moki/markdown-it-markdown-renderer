@@ -4,16 +4,7 @@ import {tests} from 'commonmark-spec';
 
 import {CommonMarkSpecEntry} from './__fixtures__';
 
-// paragraph mock
-// test cases are inline, we are not concerned with block content here
-const paragraph = {
-    paragraph_open: () => '',
-    paragraph_close: () => '',
-};
-
-const renderer = new MarkdownRenderer({
-    customRules: {...paragraph},
-});
+const renderer = new MarkdownRenderer();
 
 const md = new MarkdownIt('commonmark', {html: true});
 
@@ -49,6 +40,7 @@ const sectionsKeep = new Set([
     'Raw HTML',
     'Images',
     'Thematic breaks',
+    'Paragraphs',
 ]);
 
 const examplesOmit = new Set([
@@ -132,6 +124,17 @@ const examplesOmit = new Set([
     48,
     // spaces consumed by the parser
     47, 51, 52, 53, 54,
+
+    // 'Paragraphs'
+    // spaces between blocks are consumed by the parser
+    221,
+    // hard line breaks are always transformed into explicit form:
+    // \ followed by a newline
+    226,
+    // code indent blocks are not implemented
+    225,
+    // leading spaces are consumed by the parser
+    222, 223,
 ]);
 
 const units = tests.filter(({section, number}) => {
