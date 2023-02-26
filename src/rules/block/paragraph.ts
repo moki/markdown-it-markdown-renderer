@@ -3,6 +3,8 @@ import Token from 'markdown-it/lib/token';
 
 import {MarkdownRenderer} from 'src/renderer';
 
+const interrupters = new Set(['hr', 'heading_close']);
+
 const paragraph: Renderer.RenderRuleRecord = {
     paragraph_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         const current = tokens[i];
@@ -26,9 +28,9 @@ const paragraph: Renderer.RenderRuleRecord = {
         }
 
         // vertical blocks separation
-        if (previous.type === 'hr') {
-            // thematic breaks can interrupt paragraphs
-            // therefore empty line between it and paragraphs isn't required
+        // thematic breaks, headings can interrupt paragraphs
+        // therefore empty line between them and paragraphs isn't required
+        if (interrupters.has(previous.type)) {
             rendered += this.EOL;
         } else {
             rendered += this.EOL.repeat(2);
