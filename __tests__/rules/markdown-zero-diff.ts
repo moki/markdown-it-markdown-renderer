@@ -80,8 +80,6 @@ const examplesOmit = new Set([
     504,
     // best we can with html entities see disabling link normalization below
     502, 499,
-    // paragraphs are not implemented
-    500,
     // < and > are consumed by the parser
     485, 488, 491, 498,
     // lost info by the parser, does not change meaing of the constructs
