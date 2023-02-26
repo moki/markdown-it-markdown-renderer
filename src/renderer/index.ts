@@ -21,6 +21,14 @@ export enum MarkdownRendererMode {
     Development,
 }
 
+// Renderer Environment
+// passed to every rule handling tokens render
+export type MarkdownRendererEnv = {
+    // array of original markdown string split by new lines
+    // some rules are using it to achive more accurate rendering
+    source?: string[];
+};
+
 class MarkdownRenderer extends Renderer {
     static defaultRules: Renderer.RenderRuleRecord = {...inline, ...block};
 
