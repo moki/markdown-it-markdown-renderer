@@ -43,6 +43,7 @@ const sectionsKeep = new Set([
     'Paragraphs',
     'ATX headings',
     'Setext headings',
+    'Indented code blocks',
 ]);
 
 const examplesOmit = new Set([
@@ -161,6 +162,14 @@ const examplesOmit = new Set([
     99, 94,
     // intended to fail
     104,
+
+    // 'Indented code blocks',
+    // trailling spaces consumed by the parser
+    111,
+    // indentation inside paragraph after softbreak is consumed by the parser
+    113,
+    // lists are not implemented
+    108, 109,
 ]);
 
 const units = tests.filter(({section, number}) => {
