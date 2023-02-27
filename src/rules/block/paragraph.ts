@@ -3,7 +3,7 @@ import Token from 'markdown-it/lib/token';
 
 import {MarkdownRenderer} from 'src/renderer';
 
-const interrupters = new Set(['hr', 'heading_close']);
+const interrupters = new Set(['hr', 'heading_close', 'code_block']);
 
 const paragraph: Renderer.RenderRuleRecord = {
     paragraph_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
