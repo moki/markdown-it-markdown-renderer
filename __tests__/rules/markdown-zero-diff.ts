@@ -1,10 +1,10 @@
 import MarkdownIt from 'markdown-it';
-import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv, MarkdownRendererMode} from 'src/renderer';
 import {tests} from 'commonmark-spec';
 
 import {CommonMarkSpecEntry} from './__fixtures__';
 
-const renderer = new MarkdownRenderer();
+const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Production});
 
 const md = new MarkdownIt('commonmark', {html: true});
 
@@ -45,6 +45,7 @@ const sectionsKeep = new Set([
     'Setext headings',
     'Indented code blocks',
     'Fenced code blocks',
+    'HTML blocks',
 ]);
 
 const examplesOmit = new Set([
@@ -183,6 +184,18 @@ const examplesOmit = new Set([
     139, 137, 126, 127,
     // normalize markup close different from markup open
     124, 143,
+
+    // 'HTML blocks',
+    // spaces are consumed by the parser
+    // note: doesn't change semantics(i.e. same html render)
+    152,
+    // extra spacing after paragraph doesn't change semantics
+    // but helps prevent joining with previous paragraph
+    182, 185, 188, 180, 179, 177, 176, 172, 170, 169, 148,
+    // lists are not implemented
+    175,
+    // blockquotes are not implemented
+    174,
 ]);
 
 const units = tests.filter(({section, number}) => {
