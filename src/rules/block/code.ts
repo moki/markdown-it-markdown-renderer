@@ -12,7 +12,10 @@ const code: Renderer.RenderRuleRecord = {
         options: Options,
         env: MarkdownRendererEnv,
     ) {
-        const token = tokens[i];
+        const {content, map} = tokens[i];
+        if (!map) {
+            throw new Error('failed render code block');
+        }
 
         let rendered = '';
 
@@ -24,35 +27,29 @@ const code: Renderer.RenderRuleRecord = {
         let indentation = 0;
 
         // determine indentation
-        const [start, end] = token.map ?? [];
+        const [start, end] = map;
         const {source} = env;
-        if (start && end && source) {
+        if (start !== null && end !== null && source) {
             const [first] = source.slice(start, end);
 
-            const [spaces] = first.match(/(^\s+)/mu) ?? [''];
+            const spaces = first.length - first.trimStart().length;
 
-            indentation += spaces.length;
+            indentation += spaces > 4 ? 4 : spaces;
         } else {
             indentation += 4;
         }
 
-        const contentLines = token.content.split('\n');
-
-        let content = '';
+        const contentLines = content.split('\n');
 
         for (const line of contentLines) {
             if (line.length) {
-                content += this.SPACE.repeat(indentation);
+                rendered += this.SPACE.repeat(indentation);
             }
 
-            content += line;
-
-            content += this.EOL;
+            rendered += line + this.EOL;
         }
 
-        content = content.replace(/(\s*$)/gu, '');
-
-        rendered += content;
+        rendered = rendered.trimEnd();
 
         return rendered;
     },
