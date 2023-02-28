@@ -44,6 +44,7 @@ const sectionsKeep = new Set([
     'ATX headings',
     'Setext headings',
     'Indented code blocks',
+    'Fenced code blocks',
 ]);
 
 const examplesOmit = new Set([
@@ -170,6 +171,18 @@ const examplesOmit = new Set([
     113,
     // lists are not implemented
     108, 109,
+
+    // 'Fenced code blocks'
+    // paragraph new lines becomes spaces
+    121,
+    // code_inline leading and trailling spaces are consumed by the parser
+    145,
+    // blockquotes are not implemented
+    128,
+    // normalize not closed fence blocks
+    139, 137, 126, 127,
+    // normalize markup close different from markup open
+    124, 143,
 ]);
 
 const units = tests.filter(({section, number}) => {
