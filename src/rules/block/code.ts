@@ -21,7 +21,10 @@ const code: Renderer.RenderRuleRecord = {
 
         // vertical separation
         if (i) {
-            rendered += this.EOL;
+            const previous = tokens[i - 1];
+            const height = previous?.type === 'html_block' ? 2 : 1;
+
+            rendered += this.EOL.repeat(height);
         }
 
         let indentation = 0;
