@@ -29,6 +29,13 @@ export type MarkdownRendererEnv = {
     source?: string[];
 };
 
+export type Blockquote = {
+    row: number;
+    col: number;
+    spaces: number;
+    markup: string;
+};
+
 class MarkdownRenderer extends Renderer {
     static defaultRules: Renderer.RenderRuleRecord = {...inline, ...block};
 
@@ -56,6 +63,11 @@ class MarkdownRenderer extends Renderer {
     protected EOL: string;
     // space used by renderer
     protected SPACE: string;
+    // blockquotes
+    protected blockquotes: Array<Blockquote>;
+    // flag to detect if we rendered blockquote markup
+    // before finding blockquote_close
+    protected renderedBlockquote: boolean;
 
     // renderer mode
     private mode: MarkdownRendererMode;
@@ -79,7 +91,26 @@ class MarkdownRenderer extends Renderer {
         this.EOL = EOL;
         this.SPACE = SPACE;
 
+        // blockquotes state
+        this.blockquotes = new Array<Blockquote>();
+        this.renderedBlockquote = false;
+
         this.setRules({...MarkdownRenderer.defaultRules, ...customRules});
+    }
+
+    // blockquotes methods
+    renderBlockquote(): string {
+        let rendered = '';
+
+        for (const {markup, spaces} of this.blockquotes) {
+            rendered += markup + this.SPACE.repeat(spaces);
+        }
+
+        if (rendered.length) {
+            this.renderedBlockquote = true;
+        }
+
+        return rendered;
     }
 
     setRules(rules: Renderer.RenderRuleRecord) {
