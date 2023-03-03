@@ -46,6 +46,7 @@ const sectionsKeep = new Set([
     'Indented code blocks',
     'Fenced code blocks',
     'HTML blocks',
+    'Block quotes',
 ]);
 
 const examplesOmit = new Set([
@@ -158,8 +159,6 @@ const examplesOmit = new Set([
     105,
     // indented code block are not implemented
     85, 100,
-    // blockquotes not implemented
-    101, 93, 92,
     // lists are not implemented
     99, 94,
     // intended to fail
@@ -178,7 +177,7 @@ const examplesOmit = new Set([
     121,
     // code_inline leading and trailling spaces are consumed by the parser
     145,
-    // blockquotes are not implemented
+    // semantics are the same
     128,
     // normalize not closed fence blocks
     139, 137, 126, 127,
@@ -194,8 +193,29 @@ const examplesOmit = new Set([
     182, 185, 188, 180, 179, 177, 176, 172, 170, 169, 148,
     // lists are not implemented
     175,
-    // blockquotes are not implemented
+    // semantics are the same
     174,
+
+    // 'Block quotes'
+    // paragraphs
+    // blockquotes are lazy, semantics preserved
+    251, 249, 233, 243, 241,
+    // we always separate paragraphs
+    248,
+    // we always render spaces that follows blockquote even on empty lines
+    244,
+    // fences
+    // close fences explicitly
+    237,
+    // omit empty lines inside empty blockquote
+    240,
+    // headers
+    // lazy blockquotes inside paragraphs
+    228, 229,
+    // leading spaces consumed by the parser
+    230,
+    // lists are not implemented
+    238, 235,
 ]);
 
 const units = tests.filter(({section, number}) => {
