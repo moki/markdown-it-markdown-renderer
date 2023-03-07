@@ -27,6 +27,8 @@ const code: Renderer.RenderRuleRecord = {
             rendered += this.EOL.repeat(height);
         }
 
+        rendered += this.renderBlockquote();
+
         let indentation = 0;
 
         // determine indentation
