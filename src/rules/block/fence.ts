@@ -71,7 +71,8 @@ function fenceHandler(
         }
     }
 
-    // rendered += markup;
+    rendered += this.renderBlockquote();
+
     rendered += this.SPACE.repeat(openIndent);
     rendered += openMarkup;
 
@@ -86,6 +87,8 @@ function fenceHandler(
         rendered += line;
         rendered += this.EOL;
     }
+
+    rendered += this.renderBlockquote();
 
     rendered += this.SPACE.repeat(closeIndent);
     rendered += closeMarkup;
