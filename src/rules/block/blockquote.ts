@@ -64,17 +64,26 @@ const blockquote: Renderer.RenderRuleRecord = {
 
         this.blockquotes.push({row: start, col, spaces, markup});
 
+        // remember token that blockquote follows
+        // to make decisions about vertical gap rendering later
+        if (i) {
+            this.pending.push(tokens[i - 1]);
+        }
+
+        this.renderedBlockquote = false;
+
         return '';
     },
     blockquote_close: function (this: MarkdownRenderer) {
-        const row = Array.from(this.blockquotes.keys()).sort().pop();
-        if (row === null || row === undefined) {
-            throw new Error('failed render blockquotes row');
+        let rendered = '';
+
+        if (!this.renderedBlockquote) {
+            rendered += this.renderBlockquote();
         }
 
         this.blockquotes.pop();
 
-        return '';
+        return rendered;
     },
 };
 
