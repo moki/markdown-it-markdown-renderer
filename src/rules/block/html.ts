@@ -16,7 +16,8 @@ const html: Renderer.RenderRuleRecord = {
                 previous?.type === 'fence' ||
                 previous?.type === 'code_block' ||
                 previous?.type === 'html_block' ||
-                previous?.type === 'paragraph_close'
+                previous?.type === 'paragraph_close' ||
+                this.blockquotes.length
             ) {
                 rendered += this.EOL.repeat(2);
             } else {
@@ -24,9 +25,11 @@ const html: Renderer.RenderRuleRecord = {
             }
         }
 
-        if (content?.length) {
-            rendered += content.trimEnd();
+        for (const line of content.trimEnd().split('\n')) {
+            rendered += this.renderBlockquote() + line + this.EOL;
         }
+
+        rendered = rendered.trimEnd();
 
         return rendered;
     },
