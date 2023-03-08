@@ -18,27 +18,59 @@ const paragraph: Renderer.RenderRuleRecord = {
             return rendered;
         }
 
-        const previous = tokens[i - 1];
-        if (!previous) {
-            throw new Error('failed to rendrer paragraph');
+        // receive previous token
+        // in case of being inside blockquote we want to examine
+        // token that comes right before blockquote_open token
+        let previous = tokens[i - 1];
+        if (this.blockquotes.length && this.pending.length) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            previous = this.pending.pop()!;
         }
-
+        if (!previous) {
+            throw new Error('failed to rendrer paragraphi');
+        }
         if (!previous.block) {
             return '';
         }
 
-        // vertical blocks separation
-        // thematic breaks, headings can interrupt paragraphs
-        // therefore empty line between them and paragraphs isn't required
+        // vertical gap rendering
         if (interrupters.has(previous.type)) {
             rendered += this.EOL;
         } else {
-            rendered += this.EOL.repeat(2);
+            if (previous.type === 'blockquote_close') {
+                rendered += this.EOL;
+            }
+
+            let prevDepth = previous.attrGet('blockquotesDepth');
+            if (!prevDepth) {
+                prevDepth = String('0');
+            }
+
+            const parsedPrevDepth = parseInt(prevDepth, 10);
+            const currentDepth = this.blockquotes.length;
+
+            // separate if on the same blockquote depth
+            if (parsedPrevDepth === currentDepth) {
+                rendered += this.EOL;
+            }
+
+            // handle adjacent paragraphs inside blockquote
+            if (previous.type === 'paragraph_close' && parsedPrevDepth) {
+                rendered += this.renderBlockquote();
+            }
+
+            rendered += this.EOL;
         }
+
+        rendered += this.renderBlockquote();
 
         return rendered;
     },
-    paragraph_close: function () {
+    paragraph_close: function (this: MarkdownRenderer, tokens: Token[], i: number) {
+        // mark paragraph with its blockquotes depth
+        if (this.blockquotes.length) {
+            tokens[i].attrSet('blockquotesDepth', String(this.blockquotes.length));
+        }
         return '';
     },
 };
