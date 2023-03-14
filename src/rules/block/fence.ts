@@ -8,6 +8,7 @@ const fence: Renderer.RenderRuleRecord = {
     fence: fenceHandler,
 };
 
+// eslint-disable-next-line complexity
 function fenceHandler(
     this: MarkdownRenderer,
     tokens: Token[],
@@ -71,7 +72,23 @@ function fenceHandler(
         }
     }
 
-    rendered += this.renderBlockquote();
+    // const lastIndent = this.blockquotes[this.blockquotes.length - 1];
+
+    /*
+    if (!lastIndent?.containsLineBreak) {
+        rendered += this.renderBlockquote();
+    }
+    */
+    rendered += this.renderBlockquote(tokens[i]);
+
+    /*
+    if (
+        !this.blockquotes.length ||
+        this.blockquotes[this.blockquotes.length - 1]?.type !== 'list'
+    ) {
+        rendered += this.SPACE.repeat(openIndent);
+    }
+    */
 
     rendered += this.SPACE.repeat(openIndent);
     rendered += openMarkup;
@@ -88,10 +105,27 @@ function fenceHandler(
         rendered += this.EOL;
     }
 
-    rendered += this.renderBlockquote();
+    /*
+    if (!lastIndent?.containsLineBreak) {
+        rendered += this.renderBlockquote();
+    }
+    */
 
+    /*
+    if (
+        !this.blockquotes.length ||
+        this.blockquotes[this.blockquotes.length - 1]?.type !== 'list'
+    ) {
+        rendered += this.SPACE.repeat(closeIndent);
+    }
+    */
+
+    rendered += this.renderBlockquote(tokens[i]);
     rendered += this.SPACE.repeat(closeIndent);
     rendered += closeMarkup;
+
+    console.log(closeMarkup);
+    console.log(this.blockquotes);
 
     return rendered;
 }

@@ -13,7 +13,7 @@ const heading: Renderer.RenderRuleRecord = {
             rendered += this.EOL;
         }
 
-        rendered += this.renderBlockquote();
+        rendered += this.renderBlockquote(tokens[i]);
 
         // handle atx headings
         if (!isSetexHeading(tokens[i])) {
