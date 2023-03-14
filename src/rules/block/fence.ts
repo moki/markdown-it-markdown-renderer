@@ -8,6 +8,7 @@ const fence: Renderer.RenderRuleRecord = {
     fence: fenceHandler,
 };
 
+// eslint-disable-next-line complexity
 function fenceHandler(
     this: MarkdownRenderer,
     tokens: Token[],
@@ -71,27 +72,42 @@ function fenceHandler(
         }
     }
 
-    rendered += this.renderBlockquote();
+    if (this.blockquotes.length) {
+        rendered += this.renderBlockquote(tokens[i]);
+        rendered += openMarkup;
 
-    rendered += this.SPACE.repeat(openIndent);
-    rendered += openMarkup;
+        if (info?.length) {
+            rendered += info;
+        }
 
-    if (info?.length) {
-        rendered += info;
-    }
-
-    rendered += this.EOL;
-
-    // render content
-    for (const line of contentLines) {
-        rendered += line;
         rendered += this.EOL;
+
+        for (const line of contentLines) {
+            rendered += line;
+            rendered += this.EOL;
+        }
+
+        rendered += this.renderBlockquote(tokens[i]);
+        rendered += closeMarkup;
+    } else {
+        rendered += this.SPACE.repeat(openIndent);
+        rendered += openMarkup;
+
+        if (info?.length) {
+            rendered += info;
+        }
+
+        rendered += this.EOL;
+
+        // render content
+        for (const line of contentLines) {
+            rendered += line;
+            rendered += this.EOL;
+        }
+
+        rendered += this.SPACE.repeat(closeIndent);
+        rendered += closeMarkup;
     }
-
-    rendered += this.renderBlockquote();
-
-    rendered += this.SPACE.repeat(closeIndent);
-    rendered += closeMarkup;
 
     return rendered;
 }
