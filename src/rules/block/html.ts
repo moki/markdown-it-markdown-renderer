@@ -26,7 +26,7 @@ const html: Renderer.RenderRuleRecord = {
         }
 
         for (const line of content.trimEnd().split('\n')) {
-            rendered += this.renderBlockquote() + line + this.EOL;
+            rendered += this.renderBlockquote(tokens[i]) + line + this.EOL;
         }
 
         rendered = rendered.trimEnd();

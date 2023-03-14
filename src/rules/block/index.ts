@@ -7,6 +7,7 @@ import {code} from './code';
 import {fence} from './fence';
 import {html} from './html';
 import {blockquote} from './blockquote';
+import {list} from './list';
 
 const block: Renderer.RenderRuleRecord = {
     ...paragraph,
@@ -16,6 +17,7 @@ const block: Renderer.RenderRuleRecord = {
     ...fence,
     ...html,
     ...blockquote,
+    ...list,
 };
 
 export {block};

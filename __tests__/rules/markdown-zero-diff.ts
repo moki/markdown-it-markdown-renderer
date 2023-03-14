@@ -27,6 +27,8 @@ md.renderer = renderer;
 
 // test only rules that are implemented
 const sectionsKeep = new Set([
+    /*
+     */
     'Backslash escapes',
     'Entity and numeric character references',
     'Inlines',
@@ -47,6 +49,9 @@ const sectionsKeep = new Set([
     'Fenced code blocks',
     'HTML blocks',
     'Block quotes',
+    'Indented code blocks',
+    // 'Lists',
+    //'List items',
 ]);
 
 const examplesOmit = new Set([
@@ -190,7 +195,7 @@ const examplesOmit = new Set([
     152,
     // extra spacing after paragraph doesn't change semantics
     // but helps prevent joining with previous paragraph
-    182, 185, 188, 180, 179, 177, 176, 172, 170, 169, 148,
+    182, 185, 180, 179, 177, 176, 172, 170, 169, 148,
     // lists are not implemented
     175,
     // semantics are the same
@@ -216,9 +221,83 @@ const examplesOmit = new Set([
     230,
     // lists are not implemented
     238, 235,
+
+    // 'List items'
+    // empty lines are consumed by the parser, semantics preserved
+    // 262,
+    // empty line between code_block and blockquote start is optional
+    253,
+    // empty lines before paragraph are consumed
+    255,
+    // we render indentation even on empty lines between list item members
+    256, 258,
 ]);
 
+// 318, 320, 321, 312 (?)
+
+// const keep = new Set([245, 264, 278, 500]);
+// const keep = new Set([232, 236, 278]);
+
+// todo: 257 276
+// const keep = new Set([232, 236, 278, 294]);
+// const keep = new Set([278]);
+
+// const keep = new Set([278, 260, 294]);
+// const keep = new Set([232, 236, 245, 260, 264, 278, 281, 282, 284, 294, 500]);
+// const keep = new Set([298]);
+// const keep = new Set([281, 282, 284]);
+
+// 260 - blockquote with list item
+// 278 - new line list item
+// 294 - nested lists
+// 282, 284 - empty list
+
+// const keep = new Set([278, 270, 264]);
+// const keep = new Set([264]);
+
+const keep = new Set([
+    257, 232, 236, 245, 253, 255, 256, 258, 260, 262, 264, 270, 272, 275, 276, 277, 278, 279, 280,
+    281, 284, 294, 295, 298, 300, 301, 303, 306, 307, 308, 309, 310, 312, 314, 315, 316, 317, 318,
+    319, 322, 323, 325, 326, 500,
+]);
+
+/*
+const keep = new Set([318]);
+*/
+
+console.log = (a) => a;
+
 const units = tests.filter(({section, number}) => {
+    const cond = keep.has(number);
+    if (cond) {
+        return cond;
+    }
+
+    /*
+
+    if (!cond) {
+        return false;
+    }
+    */
+
+    /*
+    return cond;
+    */
+    /*
+
+    */
+
+    // return cond && !examplesOmit.has(number);
+    // const cond = section === 'Links' || section === 'Block quotes' || section === 'List items';
+    // const cond = true;
+    //const cond = number === 260 || number === 500;
+    // const cond = number === 251;
+
+    // const cond = number === 262;
+    // if (!cond) {
+    //     return false;
+    // }
+
     if (!sectionsKeep.has(section)) {
         return false;
     }
@@ -229,6 +308,10 @@ const units = tests.filter(({section, number}) => {
 
     return true;
 });
+
+// omit first and last empty lines
+const filterOutEmptyFstLst = (line, i, ls) => (i && i + 1 !== ls.length) || line.trim().length;
+const normalizeMD = (str: string) => str.split('\n').filter(filterOutEmptyFstLst).join('\n');
 
 describe('markdown zero diff', () => {
     units.forEach((entry: CommonMarkSpecEntry) => {
@@ -241,7 +324,11 @@ describe('markdown zero diff', () => {
             const env: MarkdownRendererEnv = {source: markdown.split('\n')};
             const rendered = md.render(markdown, env);
 
-            expect(rendered.trim()).toStrictEqual(markdown.trim());
+            // console.info(rendered);
+            // rendered.split('\n').forEach((l) => console.info(l, l.length));
+
+            // expect(rendered.trimEnd()).toStrictEqual(markdown.trimEnd());
+            expect(normalizeMD(rendered)).toStrictEqual(normalizeMD(markdown));
         });
     });
 });
