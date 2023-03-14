@@ -4,6 +4,8 @@ import Token from 'markdown-it/lib/token';
 
 import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
 
+const separate = new Set(['html_block', 'paragraph_close', 'bullet_list_close']);
+
 const code: Renderer.RenderRuleRecord = {
     code_block: function (
         this: MarkdownRenderer,
@@ -22,12 +24,11 @@ const code: Renderer.RenderRuleRecord = {
         // vertical separation
         if (i) {
             const previous = tokens[i - 1];
-            const height = previous?.type === 'html_block' ? 2 : 1;
+            const height = separate.has(previous?.type) ? 2 : 1;
+            // previous?.type === 'html_block' ? 2 : 1;
 
             rendered += this.EOL.repeat(height);
         }
-
-        rendered += this.renderBlockquote();
 
         let indentation = 0;
 
@@ -46,12 +47,24 @@ const code: Renderer.RenderRuleRecord = {
 
         const contentLines = content.split('\n');
 
-        for (const line of contentLines) {
-            if (line.length) {
-                rendered += this.SPACE.repeat(indentation);
-            }
+        if (this.blockquotes.length) {
+            for (const line of contentLines) {
+                if (line.length) {
+                    rendered += this.renderBlockquote(tokens[i]);
+                }
 
-            rendered += line + this.EOL;
+                rendered += line;
+                rendered += this.EOL;
+            }
+        } else {
+            for (const line of contentLines) {
+                if (line.length) {
+                    rendered += this.SPACE.repeat(indentation);
+                }
+
+                rendered += line;
+                rendered += this.EOL;
+            }
         }
 
         rendered = rendered.trimEnd();

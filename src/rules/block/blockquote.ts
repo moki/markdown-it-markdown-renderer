@@ -2,7 +2,22 @@ import {Options} from 'markdown-it';
 import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv, Blockquote} from 'src/renderer';
+
+import {consumeList} from './list';
+
+export function consumeBlockquote(line: string, i: number, blockquote: Blockquote) {
+    let cursor = i ?? 0;
+
+    const index = line.indexOf(blockquote.markup, cursor);
+    if (index === -1) {
+        throw new Error('failed to spin');
+    }
+
+    cursor = index + 1;
+
+    return cursor;
+}
 
 const blockquote: Renderer.RenderRuleRecord = {
     blockquote_open: function (
@@ -15,18 +30,63 @@ const blockquote: Renderer.RenderRuleRecord = {
         const {source} = env;
         const {map, markup} = tokens[i];
         if (!source?.length || !map || !markup) {
-            throw new Error('failed to render ordered list');
+            throw new Error('failed to render blockquote');
         }
 
         const [start] = map;
         if (start === null) {
-            throw new Error('failed to render ordered list');
+            throw new Error('failed to render blockquote');
         }
 
         const [line] = source.slice(start, start + 1);
         if (!line?.length) {
-            throw new Error('failed to render ordered list');
+            throw new Error('failed to render blockquote');
         }
+
+        // consume parsed blockquotes constructs from this line
+        // const nesting = this.blockquotes.length;
+
+        let j = 0;
+
+        for (const quote of this.blockquotes) {
+            if (quote.type === 'list' && quote.row === start) {
+                j = consumeList(line, j, quote);
+
+                continue;
+            }
+
+            if (quote.type === 'blockquote' && quote.row === start) {
+                j = consumeBlockquote(line, j, quote);
+            }
+        }
+
+        if (this.blockquotes.length === 1) {
+            j = 0;
+        }
+
+        const col = line.indexOf(markup, j);
+        if (col === -1) {
+            throw new Error('failed to render blockquote');
+        }
+
+        // scan for the tsapces
+        for (j = col + 1; line.charAt(j) === ' ' && j < line.length; j++);
+
+        this.blockquotes.push({
+            type: 'blockquote',
+            lspaces: 0,
+            tspaces: j - col - 1,
+            row: start,
+            col,
+            markup,
+            rendered: false,
+        });
+
+        this.renderedBlockquote = false;
+
+        // prevent blockquotes from sticking to each other
+        return i && tokens[i - 1].type === 'blockquote_close' ? this.EOL : '';
+        // return '';
 
         // find column index of the blockquote markup open syntax
         //
@@ -35,9 +95,14 @@ const blockquote: Renderer.RenderRuleRecord = {
         // push it on the blockquotes stack with the information about:
         // <row>    - line mapping into original markdown string
         // <col>    - char mapping into original markdown string
-        // <spaces> - amount of indentation after open markup syntax
+        // <tsapces> - amount of indentation after open markup syntax
 
+        /*
         const nesting = this.blockquotes.length;
+        const markups = this.blockquotes.map((bq) => bq.markup);
+        if (!markups.includes(markup)) {
+            markups.push(markup);
+        }
 
         let found = 0;
         let j;
@@ -57,12 +122,12 @@ const blockquote: Renderer.RenderRuleRecord = {
 
         const col = j;
 
-        // scan for the spaces
+        // scan for the tsapces
         for (j = j + 1; line.charAt(j) === ' ' && j < line.length; j++);
 
-        const spaces = j - col - 1;
+        const tsapces = j - col - 1;
 
-        this.blockquotes.push({row: start, col, spaces, markup});
+        this.blockquotes.push({row: start, col, tsapces, markup, rendered: false});
 
         // remember token that blockquote follows
         // to make decisions about vertical gap rendering later
@@ -73,12 +138,15 @@ const blockquote: Renderer.RenderRuleRecord = {
         this.renderedBlockquote = false;
 
         return '';
+        */
     },
-    blockquote_close: function (this: MarkdownRenderer) {
+    blockquote_close: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         let rendered = '';
 
-        if (!this.renderedBlockquote) {
-            rendered += this.renderBlockquote();
+        const blockquotesLen = this.blockquotes.length;
+
+        if (blockquotesLen && !this.blockquotes[blockquotesLen - 1].rendered) {
+            rendered += this.renderBlockquote(tokens[i]);
         }
 
         this.blockquotes.pop();

@@ -5,6 +5,13 @@ import {MarkdownRenderer} from 'src/renderer';
 
 const interrupters = new Set(['hr', 'heading_close', 'code_block', 'fence']);
 
+const separate = new Set([
+    'paragraph_close',
+    'bullet_list_close',
+    'ordered_list_close',
+    'html_block',
+]);
+
 const paragraph: Renderer.RenderRuleRecord = {
     paragraph_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         const current = tokens[i];
@@ -49,20 +56,14 @@ const paragraph: Renderer.RenderRuleRecord = {
             const parsedPrevDepth = parseInt(prevDepth, 10);
             const currentDepth = this.blockquotes.length;
 
-            // separate if on the same blockquote depth
-            if (parsedPrevDepth === currentDepth) {
+            if (parsedPrevDepth === currentDepth || separate.has(previous.type)) {
                 rendered += this.EOL;
+                rendered += this.renderBlockquote(current);
             }
-
-            // handle adjacent paragraphs inside blockquote
-            if (previous.type === 'paragraph_close' && parsedPrevDepth) {
-                rendered += this.renderBlockquote();
-            }
-
             rendered += this.EOL;
         }
 
-        rendered += this.renderBlockquote();
+        rendered += this.renderBlockquote(current);
 
         return rendered;
     },
@@ -71,6 +72,7 @@ const paragraph: Renderer.RenderRuleRecord = {
         if (this.blockquotes.length) {
             tokens[i].attrSet('blockquotesDepth', String(this.blockquotes.length));
         }
+
         return '';
     },
 };
