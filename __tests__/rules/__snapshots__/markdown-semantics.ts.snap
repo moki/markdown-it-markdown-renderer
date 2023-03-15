@@ -1,0 +1,956 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown semantics ATX headings 67 1`] = `"# foo"`;
+
+exports[`markdown semantics ATX headings 68 1`] = `
+"### foo
+## foo
+# foo"
+`;
+
+exports[`markdown semantics ATX headings 70 1`] = `
+"foo
+# bar"
+`;
+
+exports[`markdown semantics ATX headings 71 1`] = `
+"## foo
+### bar"
+`;
+
+exports[`markdown semantics ATX headings 72 1`] = `
+"# foo
+##### foo"
+`;
+
+exports[`markdown semantics ATX headings 73 1`] = `"### foo"`;
+
+exports[`markdown semantics ATX headings 79 1`] = `
+"## 
+# 
+### "
+`;
+
+exports[`markdown semantics Backslash escapes 17 1`] = `"\`\`\\\\[\\\\\`\`\`"`;
+
+exports[`markdown semantics Backslash escapes 22 1`] = `"[foo](/bar* \\"ti*tle\\")"`;
+
+exports[`markdown semantics Backslash escapes 23 1`] = `"[foo](/bar* \\"ti*tle\\")"`;
+
+exports[`markdown semantics Block quotes 228 1`] = `
+"> # Foo
+> bar
+baz"
+`;
+
+exports[`markdown semantics Block quotes 229 1`] = `
+"># Foo
+>bar
+baz"
+`;
+
+exports[`markdown semantics Block quotes 230 1`] = `
+"> # Foo
+> bar
+baz"
+`;
+
+exports[`markdown semantics Block quotes 233 1`] = `
+"> bar
+baz
+foo"
+`;
+
+exports[`markdown semantics Block quotes 237 1`] = `
+"> \`\`\`
+> \`\`\`
+
+
+foo
+\`\`\`
+\`\`\`"
+`;
+
+exports[`markdown semantics Block quotes 238 1`] = `
+"> foo
+- bar"
+`;
+
+exports[`markdown semantics Block quotes 240 1`] = `">"`;
+
+exports[`markdown semantics Block quotes 241 1`] = `">foo"`;
+
+exports[`markdown semantics Block quotes 243 1`] = `
+"> foo
+bar"
+`;
+
+exports[`markdown semantics Block quotes 244 1`] = `
+"> foo
+> 
+> bar"
+`;
+
+exports[`markdown semantics Block quotes 248 1`] = `
+"> bar
+
+
+baz"
+`;
+
+exports[`markdown semantics Block quotes 249 1`] = `
+"> bar
+
+
+baz"
+`;
+
+exports[`markdown semantics Block quotes 251 1`] = `
+">>> foo
+bar
+baz"
+`;
+
+exports[`markdown semantics Code spans 329 1`] = `"\`\`foo \` bar\`\`"`;
+
+exports[`markdown semantics Code spans 330 1`] = `"\`\`\`\`"`;
+
+exports[`markdown semantics Code spans 331 1`] = `"\` \`\` \`"`;
+
+exports[`markdown semantics Code spans 335 1`] = `"\`\`foo bar   baz\`\`"`;
+
+exports[`markdown semantics Code spans 336 1`] = `"\`\`foo \`\`"`;
+
+exports[`markdown semantics Code spans 337 1`] = `"\`foo   bar  baz\`"`;
+
+exports[`markdown semantics Code spans 340 1`] = `"\`foo \`\` bar\`"`;
+
+exports[`markdown semantics Entity and numeric character references 32 1`] = `"[foo](/föö \\"föö\\")"`;
+
+exports[`markdown semantics Entity and numeric character references 33 1`] = `"[foo](/föö \\"föö\\")"`;
+
+exports[`markdown semantics Entity and numeric character references 38 1`] = `
+"&#42; foo
+* foo"
+`;
+
+exports[`markdown semantics Fenced code blocks 121 1`] = `"\`\`foo\`\`"`;
+
+exports[`markdown semantics Fenced code blocks 124 1`] = `
+"\`\`\`\`
+aaa
+\`\`\`
+\`\`\`\`\`\`"
+`;
+
+exports[`markdown semantics Fenced code blocks 126 1`] = `
+"\`\`\`
+\`\`\`"
+`;
+
+exports[`markdown semantics Fenced code blocks 127 1`] = `
+"\`\`\`\`\`
+
+\`\`\`
+\`\`\`\`\`"
+`;
+
+exports[`markdown semantics Fenced code blocks 128 1`] = `
+"> \`\`\`
+> aaa
+> \`\`\`
+
+
+bbb"
+`;
+
+exports[`markdown semantics Fenced code blocks 137 1`] = `
+"\`\`\`
+aaa
+    \`\`\`"
+`;
+
+exports[`markdown semantics Fenced code blocks 139 1`] = `
+"~~~~~~
+aaa
+~~~"
+`;
+
+exports[`markdown semantics Fenced code blocks 143 1`] = `
+"~~~~    ruby startline=3 $%@#$
+def foo(x)
+  return 3
+end
+~~~~~~~"
+`;
+
+exports[`markdown semantics Fenced code blocks 145 1`] = `
+"\`\`\`aa\`\`\`
+foo"
+`;
+
+exports[`markdown semantics HTML blocks 148 1`] = `
+"<table><tr><td>
+<pre>
+**Hello**,
+
+_world_.
+</pre>
+
+</td></tr></table>"
+`;
+
+exports[`markdown semantics HTML blocks 169 1`] = `
+"<pre language=\\"haskell\\"><code>
+import Text.HTML.TagSoup
+
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 170 1`] = `
+"<script type=\\"text/javascript\\">
+// JavaScript example
+
+document.getElementById(\\"demo\\").innerHTML = \\"Hello JavaScript!\\";
+</script>
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 172 1`] = `
+"<style
+  type=\\"text/css\\">
+h1 {color:red;}
+
+p {color:blue;}
+</style>
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 174 1`] = `
+"
+> <div>
+> foo
+
+
+bar"
+`;
+
+exports[`markdown semantics HTML blocks 175 1`] = `
+"
+- <div>
+- foo"
+`;
+
+exports[`markdown semantics HTML blocks 176 1`] = `
+"<style>p{color:red;}</style>
+
+*foo*"
+`;
+
+exports[`markdown semantics HTML blocks 177 1`] = `
+"<!-- foo -->*bar*
+
+*baz*"
+`;
+
+exports[`markdown semantics HTML blocks 179 1`] = `
+"<!-- Foo
+
+bar
+   baz -->
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 180 1`] = `
+"<?php
+
+  echo '>';
+
+?>
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 182 1`] = `
+"<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+
+okay"
+`;
+
+exports[`markdown semantics HTML blocks 185 1`] = `
+"Foo
+
+<div>
+bar
+</div>"
+`;
+
+exports[`markdown semantics Hard line breaks 633 1`] = `
+"foo\\\\
+baz"
+`;
+
+exports[`markdown semantics Hard line breaks 635 1`] = `
+"foo\\\\
+baz"
+`;
+
+exports[`markdown semantics Hard line breaks 636 1`] = `
+"foo\\\\
+bar"
+`;
+
+exports[`markdown semantics Hard line breaks 637 1`] = `
+"foo\\\\
+bar"
+`;
+
+exports[`markdown semantics Hard line breaks 638 1`] = `
+"*foo\\\\
+bar*"
+`;
+
+exports[`markdown semantics Hard line breaks 640 1`] = `"\`code   span\`"`;
+
+exports[`markdown semantics Hard line breaks 641 1`] = `"\`code\\\\ span\`"`;
+
+exports[`markdown semantics Hard line breaks 645 1`] = `"foo"`;
+
+exports[`markdown semantics Hard line breaks 647 1`] = `"### foo"`;
+
+exports[`markdown semantics Images 572 1`] = `"![foo *bar*](train.jpg \\"train & tracks\\")"`;
+
+exports[`markdown semantics Images 575 1`] = `"![foo *bar*](train.jpg \\"train & tracks\\")"`;
+
+exports[`markdown semantics Images 576 1`] = `"![foo *bar*](train.jpg \\"train & tracks\\")"`;
+
+exports[`markdown semantics Images 578 1`] = `"My ![foo bar](/path/to/train.jpg \\"title\\")"`;
+
+exports[`markdown semantics Images 579 1`] = `"![foo](url)"`;
+
+exports[`markdown semantics Images 581 1`] = `"![foo](/url)"`;
+
+exports[`markdown semantics Images 582 1`] = `"![foo](/url)"`;
+
+exports[`markdown semantics Images 583 1`] = `"![foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 584 1`] = `"![*foo* bar](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 585 1`] = `"![Foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 586 1`] = `
+"![foo](/url \\"title\\")
+[]"
+`;
+
+exports[`markdown semantics Images 587 1`] = `"![foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 588 1`] = `"![*foo* bar](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 589 1`] = `
+"![[foo]]
+
+[[foo]]: /url \\"title\\""
+`;
+
+exports[`markdown semantics Images 590 1`] = `"![Foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 591 1`] = `"!\\\\[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Images 592 1`] = `"\\\\![foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Indented code blocks 108 1`] = `
+"  - foo
+    
+    bar"
+`;
+
+exports[`markdown semantics Indented code blocks 109 1`] = `
+"1.  foo
+    - bar"
+`;
+
+exports[`markdown semantics Indented code blocks 111 1`] = `
+"    chunk1
+
+    chunk2
+
+
+
+    chunk3"
+`;
+
+exports[`markdown semantics Indented code blocks 113 1`] = `
+"Foo
+bar"
+`;
+
+exports[`markdown semantics Indented code blocks 117 1`] = `"    foo"`;
+
+exports[`markdown semantics Indented code blocks 118 1`] = `"    foo"`;
+
+exports[`markdown semantics Links 485 1`] = `"[link]()"`;
+
+exports[`markdown semantics Links 488 1`] = `"[link](/my uri)"`;
+
+exports[`markdown semantics Links 491 1`] = `"[a](b)c)"`;
+
+exports[`markdown semantics Links 494 1`] = `"[link]((foo))"`;
+
+exports[`markdown semantics Links 497 1`] = `"[link](foo(and(bar))"`;
+
+exports[`markdown semantics Links 498 1`] = `"[link](foo(and(bar))"`;
+
+exports[`markdown semantics Links 499 1`] = `"[link](foo):)"`;
+
+exports[`markdown semantics Links 502 1`] = `"[link](foo%20bä)"`;
+
+exports[`markdown semantics Links 504 1`] = `
+"[link](/url \\"title\\")
+[link](/url \\"title\\")
+[link](/url \\"title\\")"
+`;
+
+exports[`markdown semantics Links 505 1`] = `"[link](/url 'title \\"\\"')"`;
+
+exports[`markdown semantics Links 509 1`] = `"[link](/uri \\"title\\")"`;
+
+exports[`markdown semantics Links 526 1`] = `"[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 527 1`] = `"[link [foo [bar]]](/uri)"`;
+
+exports[`markdown semantics Links 528 1`] = `"[link \\\\[bar](/uri)"`;
+
+exports[`markdown semantics Links 529 1`] = `"[link *foo **bar** \`#\`*](/uri)"`;
+
+exports[`markdown semantics Links 530 1`] = `"[![moon](moon.jpg)](/uri)"`;
+
+exports[`markdown semantics Links 531 1`] = `"[foo [bar](/uri)][ref](/uri)"`;
+
+exports[`markdown semantics Links 532 1`] = `"[foo *bar [baz](/uri)*][ref](/uri)"`;
+
+exports[`markdown semantics Links 533 1`] = `"*[foo*](/uri)"`;
+
+exports[`markdown semantics Links 534 1`] = `"[foo *bar](/uri)*"`;
+
+exports[`markdown semantics Links 535 1`] = `"[foo <bar attr=\\"][ref]\\">"`;
+
+exports[`markdown semantics Links 536 1`] = `"[foo\`][ref]\`"`;
+
+exports[`markdown semantics Links 537 1`] = `"[foo<http://example.com/?search=][ref]>"`;
+
+exports[`markdown semantics Links 538 1`] = `"[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 539 1`] = `"[ẞ](/url)"`;
+
+exports[`markdown semantics Links 540 1`] = `"[Baz](/url)"`;
+
+exports[`markdown semantics Links 541 1`] = `"[foo] [bar](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 542 1`] = `
+"[foo]
+[bar](/url \\"title\\")"
+`;
+
+exports[`markdown semantics Links 543 1`] = `"[bar](/url1)"`;
+
+exports[`markdown semantics Links 544 1`] = `"[bar][foo\\\\!]"`;
+
+exports[`markdown semantics Links 545 1`] = `
+"[foo][ref[]
+
+[ref[]: /uri"
+`;
+
+exports[`markdown semantics Links 546 1`] = `
+"[foo][ref[bar]]
+
+[ref[bar]]: /uri"
+`;
+
+exports[`markdown semantics Links 547 1`] = `
+"[[[foo]]]
+
+[[[foo]]]: /url"
+`;
+
+exports[`markdown semantics Links 548 1`] = `"[foo][ref\\\\[]"`;
+
+exports[`markdown semantics Links 549 1`] = `"[bar\\\\\\\\](/uri)"`;
+
+exports[`markdown semantics Links 550 1`] = `
+"[]
+
+[]: /uri"
+`;
+
+exports[`markdown semantics Links 551 1`] = `
+"[
+]
+
+[
+]: /uri"
+`;
+
+exports[`markdown semantics Links 552 1`] = `"[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 553 1`] = `"[*foo* bar](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 554 1`] = `"[Foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 555 1`] = `
+"[foo](/url \\"title\\")
+[]"
+`;
+
+exports[`markdown semantics Links 556 1`] = `"[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 557 1`] = `"[*foo* bar](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 558 1`] = `"[[*foo* bar](/url \\"title\\")]"`;
+
+exports[`markdown semantics Links 559 1`] = `"[[bar [foo](/url)"`;
+
+exports[`markdown semantics Links 560 1`] = `"[Foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 561 1`] = `"[foo](/url) bar"`;
+
+exports[`markdown semantics Links 562 1`] = `"\\\\[foo](/url \\"title\\")"`;
+
+exports[`markdown semantics Links 563 1`] = `"*[foo*](/url)"`;
+
+exports[`markdown semantics Links 564 1`] = `"[foo](/url2)"`;
+
+exports[`markdown semantics Links 565 1`] = `"[foo](/url1)"`;
+
+exports[`markdown semantics Links 566 1`] = `"[foo]()"`;
+
+exports[`markdown semantics Links 567 1`] = `"[foo](/url1)(not a link)"`;
+
+exports[`markdown semantics Links 568 1`] = `"[foo][bar](/url)"`;
+
+exports[`markdown semantics Links 569 1`] = `"[foo](/url2)[baz](/url1)"`;
+
+exports[`markdown semantics Links 570 1`] = `"[foo][bar](/url1)"`;
+
+exports[`markdown semantics List items 253 1`] = `
+"A paragraph
+with two lines.
+
+    indented code
+> A block quote."
+`;
+
+exports[`markdown semantics List items 254 1`] = `
+"1.  A paragraph
+with two lines.
+
+        indented code
+    > A block quote."
+`;
+
+exports[`markdown semantics List items 255 1`] = `
+"- one
+
+two"
+`;
+
+exports[`markdown semantics List items 256 1`] = `
+"- one
+  
+  two"
+`;
+
+exports[`markdown semantics List items 258 1`] = `
+" -    one
+      
+      two"
+`;
+
+exports[`markdown semantics List items 259 1`] = `
+"> >  1.  one
+> >      
+> >      two"
+`;
+
+exports[`markdown semantics List items 260 1`] = `
+">>- one
+>>
+>>two"
+`;
+
+exports[`markdown semantics List items 262 1`] = `
+"- foo
+  
+  bar"
+`;
+
+exports[`markdown semantics List items 263 1`] = `
+"1.  foo
+    \`\`\`
+    bar
+    \`\`\`
+    baz
+    > bam"
+`;
+
+exports[`markdown semantics List items 268 1`] = `"3. ok"`;
+
+exports[`markdown semantics List items 272 1`] = `
+"    indented code
+paragraph
+
+    more code"
+`;
+
+exports[`markdown semantics List items 273 1`] = `
+"1.     indented code
+   paragraph
+
+       more code"
+`;
+
+exports[`markdown semantics List items 274 1`] = `
+"1.      indented code
+   paragraph
+
+       more code"
+`;
+
+exports[`markdown semantics List items 275 1`] = `
+"foo
+
+bar"
+`;
+
+exports[`markdown semantics List items 276 1`] = `
+"-    foo
+
+bar"
+`;
+
+exports[`markdown semantics List items 277 1`] = `
+"-  foo
+   
+   bar"
+`;
+
+exports[`markdown semantics List items 279 1`] = `
+"-
+  foo"
+`;
+
+exports[`markdown semantics List items 280 1`] = `
+"-
+
+foo"
+`;
+
+exports[`markdown semantics List items 282 1`] = `
+"- foo
+-
+- bar"
+`;
+
+exports[`markdown semantics List items 286 1`] = `
+" 1.  A paragraph
+with two lines.
+
+         indented code
+     > A block quote."
+`;
+
+exports[`markdown semantics List items 287 1`] = `
+"  1.  A paragraph
+with two lines.
+
+          indented code
+      > A block quote."
+`;
+
+exports[`markdown semantics List items 288 1`] = `
+"   1.  A paragraph
+with two lines.
+
+           indented code
+       > A block quote."
+`;
+
+exports[`markdown semantics List items 290 1`] = `
+"  1.  A paragraph
+with two lines.
+
+          indented code
+      > A block quote."
+`;
+
+exports[`markdown semantics List items 291 1`] = `
+"  1.  A paragraph
+with two lines."
+`;
+
+exports[`markdown semantics List items 293 1`] = `
+"> 1. > Blockquote
+continued here."
+`;
+
+exports[`markdown semantics List items 299 1`] = `"1. - 1. foo"`;
+
+exports[`markdown semantics Lists 306 1`] = `
+"- foo
+- bar
+- baz"
+`;
+
+exports[`markdown semantics Lists 307 1`] = `
+"- foo
+  - bar
+    - baz
+      
+      bim"
+`;
+
+exports[`markdown semantics Lists 308 1`] = `
+"- foo
+- bar
+<!-- -->
+- baz
+- bim"
+`;
+
+exports[`markdown semantics Lists 309 1`] = `
+"-   foo
+    
+    notcode
+-   foo
+<!-- -->
+
+    code"
+`;
+
+exports[`markdown semantics Lists 311 1`] = `
+"1. a
+  2. b
+   3. c"
+`;
+
+exports[`markdown semantics Lists 312 1`] = `
+"- a
+ - b
+  - c
+   - d
+- e"
+`;
+
+exports[`markdown semantics Lists 313 1`] = `
+"1. a
+  2. b
+    3. c"
+`;
+
+exports[`markdown semantics Lists 314 1`] = `
+"- a
+- b
+- c"
+`;
+
+exports[`markdown semantics Lists 315 1`] = `
+"* a
+*
+* c"
+`;
+
+exports[`markdown semantics Lists 316 1`] = `
+"- a
+- b
+  
+  c
+- d"
+`;
+
+exports[`markdown semantics Lists 317 1`] = `
+"- a
+- b
+- d"
+`;
+
+exports[`markdown semantics Lists 319 1`] = `
+"- a
+  - b
+    
+    c
+- d"
+`;
+
+exports[`markdown semantics Lists 320 1`] = `
+"* a
+  > b
+* c"
+`;
+
+exports[`markdown semantics Lists 324 1`] = `
+"1. \`\`\`
+   foo
+   \`\`\`
+   bar"
+`;
+
+exports[`markdown semantics Lists 325 1`] = `
+"* foo
+  * bar
+  
+  baz"
+`;
+
+exports[`markdown semantics Lists 326 1`] = `
+"- a
+  - b
+  - c
+- d
+  - e
+  - f"
+`;
+
+exports[`markdown semantics Paragraphs 221 1`] = `
+"aaa
+
+bbb"
+`;
+
+exports[`markdown semantics Paragraphs 222 1`] = `
+"aaa
+bbb"
+`;
+
+exports[`markdown semantics Paragraphs 223 1`] = `
+"aaa
+bbb
+ccc"
+`;
+
+exports[`markdown semantics Paragraphs 224 1`] = `
+"aaa
+bbb"
+`;
+
+exports[`markdown semantics Paragraphs 226 1`] = `
+"aaa\\\\
+bbb"
+`;
+
+exports[`markdown semantics Setext headings 80 1`] = `
+"Foo *bar*
+=========
+Foo *bar*
+---------"
+`;
+
+exports[`markdown semantics Setext headings 82 1`] = `
+"Foo *bar
+baz*→
+===="
+`;
+
+exports[`markdown semantics Setext headings 83 1`] = `
+"Foo
+-------------------------
+Foo
+="
+`;
+
+exports[`markdown semantics Setext headings 84 1`] = `
+"Foo
+---
+Foo
+-----
+Foo
+  ==="
+`;
+
+exports[`markdown semantics Setext headings 87 1`] = `
+"Foo
+---"
+`;
+
+exports[`markdown semantics Setext headings 88 1`] = `
+"Foo
+= =
+
+Foo
+----"
+`;
+
+exports[`markdown semantics Setext headings 89 1`] = `
+"Foo
+-----"
+`;
+
+exports[`markdown semantics Setext headings 104 1`] = `
+"Foo
+bar
+---
+baz"
+`;
+
+exports[`markdown semantics Setext headings 105 1`] = `
+"Foo
+bar
+***
+baz"
+`;
+
+exports[`markdown semantics Soft line breaks 649 1`] = `
+"foo
+baz"
+`;
+
+exports[`markdown semantics Thematic breaks 47 1`] = `
+"***
+***
+***"
+`;
+
+exports[`markdown semantics Thematic breaks 49 1`] = `
+"Foo
+***"
+`;
+
+exports[`markdown semantics Thematic breaks 51 1`] = `"---"`;
+
+exports[`markdown semantics Thematic breaks 52 1`] = `"***********"`;
+
+exports[`markdown semantics Thematic breaks 53 1`] = `"----"`;
+
+exports[`markdown semantics Thematic breaks 54 1`] = `"----"`;
+
+exports[`markdown semantics Thematic breaks 56 1`] = `"*-*"`;
+
+exports[`markdown semantics Thematic breaks 60 1`] = `
+"* Foo
+***
+* Bar"
+`;
+
+exports[`markdown semantics Thematic breaks 61 1`] = `
+"- Foo
+***
+-"
+`;
