@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown semantics List items 253 1`] = `
+"A paragraph
+with two lines.
+
+    indented code
+> A block quote."
+`;
+
+exports[`markdown semantics List items 254 1`] = `
+"1.  A paragraph
+with two lines.
+
+        indented code
+    > A block quote."
+`;
+
+exports[`markdown semantics List items 255 1`] = `
+"- one
+
+two"
+`;
+
+exports[`markdown semantics List items 256 1`] = `
+"- one
+  
+  two"
+`;
+
+exports[`markdown semantics List items 258 1`] = `
+" -    one
+      
+      two"
+`;
+
+exports[`markdown semantics List items 259 1`] = `
+"> >  1.  one
+> >      
+> >      two"
+`;
+
+exports[`markdown semantics List items 260 1`] = `
+">>- one
+>>
+>>two"
+`;
+
+exports[`markdown semantics List items 262 1`] = `
+"- foo
+  
+  bar"
+`;
+
+exports[`markdown semantics List items 263 1`] = `
+"1.  foo
+    \`\`\`
+    bar
+    \`\`\`
+    baz
+    > bam"
+`;
+
+exports[`markdown semantics List items 272 1`] = `
+"    indented code
+paragraph
+
+    more code"
+`;
+
+exports[`markdown semantics List items 275 1`] = `
+"foo
+
+bar"
+`;
+
+exports[`markdown semantics List items 276 1`] = `
+"-    foo
+
+bar"
+`;
+
+exports[`markdown semantics List items 277 1`] = `
+"-  foo
+   
+   bar"
+`;
+
+exports[`markdown semantics List items 279 1`] = `
+"-
+  foo"
+`;
+
+exports[`markdown semantics List items 280 1`] = `
+"-
+
+foo"
+`;
+
+exports[`markdown semantics Lists 306 1`] = `
+"- foo
+- bar
+- baz"
+`;
+
+exports[`markdown semantics Lists 307 1`] = `
+"- foo
+  - bar
+    - baz
+      
+      bim"
+`;
+
+exports[`markdown semantics Lists 308 1`] = `
+"- foo
+- bar
+<!-- -->
+- baz
+- bim"
+`;
+
+exports[`markdown semantics Lists 309 1`] = `
+"-   foo
+    
+    notcode
+-   foo
+<!-- -->
+
+    code"
+`;
+
+exports[`markdown semantics Lists 312 1`] = `
+"- a
+ - b
+  - c
+   - d
+- e"
+`;
+
+exports[`markdown semantics Lists 314 1`] = `
+"- a
+- b
+- c"
+`;
+
+exports[`markdown semantics Lists 315 1`] = `
+"* a
+*
+* c"
+`;
+
+exports[`markdown semantics Lists 316 1`] = `
+"- a
+- b
+  
+  c
+- d"
+`;
+
+exports[`markdown semantics Lists 317 1`] = `
+"- a
+- b
+- d"
+`;
+
+exports[`markdown semantics Lists 319 1`] = `
+"- a
+  - b
+    
+    c
+- d"
+`;
+
+exports[`markdown semantics Lists 325 1`] = `
+"* foo
+  * bar
+  
+  baz"
+`;
+
+exports[`markdown semantics Lists 326 1`] = `
+"- a
+  - b
+  - c
+- d
+  - e
+  - f"
+`;
