@@ -4,6 +4,8 @@ import Token from 'markdown-it/lib/token';
 
 import {MarkdownRenderer, MarkdownRendererEnv, Blockquote} from 'src/renderer';
 
+import {consumeList} from './list';
+
 export function consumeBlockquote(line: string, i: number, blockquote: Blockquote) {
     let cursor = i ?? 0;
 
@@ -47,11 +49,19 @@ const blockquote: Renderer.RenderRuleRecord = {
         let j = 0;
 
         for (const quote of this.blockquotes) {
-            if (quote.type === 'list') {
-                throw new Error('unimplemented');
+            if (quote.type === 'list' && quote.row === start) {
+                j = consumeList(line, j, quote);
+
+                continue;
             }
 
-            j = consumeBlockquote(line, j, quote);
+            if (quote.type === 'blockquote' && quote.row === start) {
+                j = consumeBlockquote(line, j, quote);
+            }
+        }
+
+        if (this.blockquotes.length === 1) {
+            j = 0;
         }
 
         const col = line.indexOf(markup, j);
@@ -73,8 +83,6 @@ const blockquote: Renderer.RenderRuleRecord = {
         });
 
         this.renderedBlockquote = false;
-
-        // console.info(this.blockquotes);
 
         // prevent blockquotes from sticking to each other
         return i && tokens[i - 1].type === 'blockquote_close' ? this.EOL : '';

@@ -72,60 +72,45 @@ function fenceHandler(
         }
     }
 
-    // const lastIndent = this.blockquotes[this.blockquotes.length - 1];
+    if (this.blockquotes.length) {
+        rendered += this.renderBlockquote(tokens[i]);
+        rendered += openMarkup;
 
-    /*
-    if (!lastIndent?.containsLineBreak) {
-        rendered += this.renderBlockquote();
-    }
-    */
-    rendered += this.renderBlockquote(tokens[i]);
+        if (info?.length) {
+            rendered += info;
+        }
 
-    /*
-    if (
-        !this.blockquotes.length ||
-        this.blockquotes[this.blockquotes.length - 1]?.type !== 'list'
-    ) {
-        rendered += this.SPACE.repeat(openIndent);
-    }
-    */
-
-    rendered += this.SPACE.repeat(openIndent);
-    rendered += openMarkup;
-
-    if (info?.length) {
-        rendered += info;
-    }
-
-    rendered += this.EOL;
-
-    // render content
-    for (const line of contentLines) {
-        rendered += line;
         rendered += this.EOL;
-    }
 
-    /*
-    if (!lastIndent?.containsLineBreak) {
-        rendered += this.renderBlockquote();
-    }
-    */
+        for (const line of contentLines) {
+            rendered += line;
+            rendered += this.EOL;
+        }
 
-    /*
-    if (
-        !this.blockquotes.length ||
-        this.blockquotes[this.blockquotes.length - 1]?.type !== 'list'
-    ) {
+        rendered += this.renderBlockquote(tokens[i]);
+        rendered += closeMarkup;
+    } else {
+        // rendered += this.renderBlockquote(tokens[i]);
+
+        rendered += this.SPACE.repeat(openIndent);
+        rendered += openMarkup;
+
+        if (info?.length) {
+            rendered += info;
+        }
+
+        rendered += this.EOL;
+
+        // render content
+        for (const line of contentLines) {
+            rendered += line;
+            rendered += this.EOL;
+        }
+
+        // rendered += this.renderBlockquote(tokens[i]);
         rendered += this.SPACE.repeat(closeIndent);
+        rendered += closeMarkup;
     }
-    */
-
-    rendered += this.renderBlockquote(tokens[i]);
-    rendered += this.SPACE.repeat(closeIndent);
-    rendered += closeMarkup;
-
-    console.log(closeMarkup);
-    console.log(this.blockquotes);
 
     return rendered;
 }

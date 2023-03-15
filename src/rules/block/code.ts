@@ -30,7 +30,14 @@ const code: Renderer.RenderRuleRecord = {
             rendered += this.EOL.repeat(height);
         }
 
-        // rendered += this.renderBlockquote(tokens[i]);
+        /*
+        if (this.blockquotes.length) {
+            const last = this.blockquotes[this.blockquotes.length - 1];
+            if (last.type === 'list' && !last.rendered) {
+                this.blockquotes[this.blockquotes.length - 1].tspaces -= 4;
+            }
+        }
+        */
 
         let indentation = 0;
 
@@ -42,49 +49,31 @@ const code: Renderer.RenderRuleRecord = {
 
             const spaces = first.length - first.trimStart().length;
 
-            // console.info(spaces);
-
             indentation += spaces > 4 ? 4 : spaces;
-            // indentation += spaces;
         } else {
             indentation += 4;
         }
 
         const contentLines = content.split('\n');
 
-        for (const [j, line] of contentLines.entries()) {
-            if (line.length) {
-                if (this.blockquotes.length) {
-                    // console.info('line:', line, 'len:', line.length, 'indentation:', indentation);
+        if (this.blockquotes.length) {
+            for (const line of contentLines) {
+                if (line.length) {
                     rendered += this.renderBlockquote(tokens[i]);
                 }
-                rendered += this.SPACE.repeat(indentation);
-                /*
-                if (!this.blockquotes.filter((block) => block.type === 'list').length) {
+
+                rendered += line;
+                rendered += this.EOL;
+            }
+        } else {
+            for (const line of contentLines) {
+                if (line.length) {
+                    rendered += this.SPACE.repeat(indentation);
                 }
-                */
+
+                rendered += line;
+                rendered += this.EOL;
             }
-
-            rendered += line + this.EOL;
-
-            /*
-            let indent = indentation;
-
-            if ((contentLines.length > 2 && i === 0) || i === contentLines.length - 1) {
-                const innerIndent = line.length - line.trimStart().length;
-                indent = indentation - innerIndent;
-            }
-
-            rendered += this.SPACE.repeat(indent);
-
-            if (line.length) {
-                if (i && this.blockquotes.length) {
-                    rendered += this.renderBlockquote(tokens[i]);
-                }
-            }
-
-            rendered += line + this.EOL;
-            */
         }
 
         rendered = rendered.trimEnd();

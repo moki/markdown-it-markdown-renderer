@@ -9,7 +9,7 @@ const separate = new Set([
     'paragraph_close',
     'bullet_list_close',
     'ordered_list_close',
-    'list_item_close',
+    // 'list_item_close',
     'html_block',
 ]);
 
@@ -33,7 +33,6 @@ const paragraph: Renderer.RenderRuleRecord = {
         if (this.blockquotes.length && this.pending.length) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             previous = this.pending.pop()!;
-            console.log('set prev from stack');
         }
         if (!previous) {
             throw new Error('failed to rendrer paragraphi');
@@ -58,38 +57,13 @@ const paragraph: Renderer.RenderRuleRecord = {
             const parsedPrevDepth = parseInt(prevDepth, 10);
             const currentDepth = this.blockquotes.length;
 
-            /*
-            console.log(this.blockquotes);
-            console.log('previous', previous);
-            */
-
-            console.log('current', current);
-            console.log('previous', previous);
-            console.log(parsedPrevDepth, currentDepth);
-
             if (parsedPrevDepth === currentDepth || separate.has(previous.type)) {
                 rendered += this.EOL;
-                // rendered += this.renderBlockquote('paragraph');
                 rendered += this.renderBlockquote(current);
             }
-
-            // separate if on the same blockquote depth
-            /*
-            if (parsedPrevDepth === currentDepth || separate.has(previous.type)) {
-                rendered += this.EOL;
-            }
-
-            // handle adjacent paragraphs inside blockquote
-            // if (previous.type === 'paragraph_close' && parsedPrevDepth) {
-            if (separate.has(previous.type) && parsedPrevDepth !== null) {
-                rendered += this.renderBlockquote();
-            }
-            */
-
             rendered += this.EOL;
         }
 
-        // rendered += this.renderBlockquote('paragraph');
         rendered += this.renderBlockquote(current);
 
         return rendered;

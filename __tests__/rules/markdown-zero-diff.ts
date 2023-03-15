@@ -54,7 +54,8 @@ const sectionsKeep = new Set([
     //'List items',
 ]);
 
-const examplesOmit = new Set([
+/*
+export const semanticsTests = new Set([
     // 'Backslash escapes',
     // fence is not implemented
     19, 34, 36,
@@ -232,77 +233,51 @@ const examplesOmit = new Set([
     // we render indentation even on empty lines between list item members
     256, 258,
 ]);
+*/
 
 // 318, 320, 321, 312 (?)
 
-// const keep = new Set([245, 264, 278, 500]);
-// const keep = new Set([232, 236, 278]);
+// const semanticsTests = new Set([245, 264, 278, 500]);
+// const semanticsTests = new Set([232, 236, 278]);
 
 // todo: 257 276
-// const keep = new Set([232, 236, 278, 294]);
-// const keep = new Set([278]);
+// const semanticsTests = new Set([232, 236, 278, 294]);
+// const semanticsTests = new Set([278]);
 
-// const keep = new Set([278, 260, 294]);
-// const keep = new Set([232, 236, 245, 260, 264, 278, 281, 282, 284, 294, 500]);
-// const keep = new Set([298]);
-// const keep = new Set([281, 282, 284]);
+// const semanticsTests = new Set([278, 260, 294]);
+// const semanticsTests = new Set([232, 236, 245, 260, 264, 278, 281, 282, 284, 294, 500]);
+// const semanticsTests = new Set([298]);
+// const semanticsTests = new Set([281, 282, 284]);
 
 // 260 - blockquote with list item
 // 278 - new line list item
 // 294 - nested lists
 // 282, 284 - empty list
 
-// const keep = new Set([278, 270, 264]);
-// const keep = new Set([264]);
+// const semanticsTests = new Set([278, 270, 264]);
+// const semanticsTests = new Set([264]);
 
-const keep = new Set([
-    257, 232, 236, 245, 253, 255, 256, 258, 260, 262, 264, 270, 272, 275, 276, 277, 278, 279, 280,
-    281, 284, 294, 295, 298, 300, 301, 303, 306, 307, 308, 309, 310, 312, 314, 315, 316, 317, 318,
-    319, 322, 323, 325, 326, 500,
+const semanticsTests = new Set([
+    // unordered
+    257, 232, 236, 245, 261, 264, 270, 278, 281, 284, 294, 295, 298, 300, 301, 303, 310, 318, 322,
+    323,
 ]);
 
-/*
-const keep = new Set([318]);
-*/
+// const semanticsTests = new Set([]);
 
 console.log = (a) => a;
+console.info = (a) => a;
 
 const units = tests.filter(({section, number}) => {
-    const cond = keep.has(number);
-    if (cond) {
-        return cond;
-    }
+    const cond = semanticsTests.has(number);
 
-    /*
-
-    if (!cond) {
-        return false;
-    }
-    */
-
-    /*
     return cond;
-    */
-    /*
-
-    */
-
-    // return cond && !examplesOmit.has(number);
-    // const cond = section === 'Links' || section === 'Block quotes' || section === 'List items';
-    // const cond = true;
-    //const cond = number === 260 || number === 500;
-    // const cond = number === 251;
-
-    // const cond = number === 262;
-    // if (!cond) {
-    //     return false;
-    // }
 
     if (!sectionsKeep.has(section)) {
         return false;
     }
 
-    if (examplesOmit.has(number)) {
+    if (semanticsTests.has(number)) {
         return false;
     }
 
@@ -324,7 +299,7 @@ describe('markdown zero diff', () => {
             const env: MarkdownRendererEnv = {source: markdown.split('\n')};
             const rendered = md.render(markdown, env);
 
-            // console.info(rendered);
+            console.info(rendered);
             // rendered.split('\n').forEach((l) => console.info(l, l.length));
 
             // expect(rendered.trimEnd()).toStrictEqual(markdown.trimEnd());
