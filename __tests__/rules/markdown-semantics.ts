@@ -26,8 +26,8 @@ md.normalizeLink = id;
 md.renderer = renderer;
 
 const semanticsTests = new Set([
-    253, 254, 255, 256, 258, 259, 260, 262, 263, 272, 275, 276, 277, 279, 280, 306, 307, 308, 309,
-    312, 314, 315, 316, 317, 319, 325, 326,
+    253, 254, 255, 256, 258, 259, 260, 262, 263, 268, 272, 273, 274, 275, 276, 277, 279, 280, 282,
+    286, 287, 288, 290, 291, 293, 299, 306, 307, 308, 309, 312, 314, 315, 316, 317, 319, 325, 326,
 ]);
 
 const units = tests.filter(({number}) => semanticsTests.has(number));
@@ -35,6 +35,9 @@ const units = tests.filter(({number}) => semanticsTests.has(number));
 // omit first and last empty lines
 const filterOutEmptyFstLst = (line, i, ls) => (i && i + 1 !== ls.length) || line.trim().length;
 const normalizeMD = (str: string) => str.split('\n').filter(filterOutEmptyFstLst).join('\n');
+
+console.log = (a) => a;
+console.info = (a) => a;
 
 describe('markdown semantics', () => {
     units.forEach((entry: CommonMarkSpecEntry) => {

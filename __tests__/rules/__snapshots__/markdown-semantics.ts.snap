@@ -61,11 +61,27 @@ exports[`markdown semantics List items 263 1`] = `
     > bam"
 `;
 
+exports[`markdown semantics List items 268 1`] = `"3. ok"`;
+
 exports[`markdown semantics List items 272 1`] = `
 "    indented code
 paragraph
 
     more code"
+`;
+
+exports[`markdown semantics List items 273 1`] = `
+"1.     indented code
+   paragraph
+
+       more code"
+`;
+
+exports[`markdown semantics List items 274 1`] = `
+"1.      indented code
+   paragraph
+
+       more code"
 `;
 
 exports[`markdown semantics List items 275 1`] = `
@@ -96,6 +112,56 @@ exports[`markdown semantics List items 280 1`] = `
 
 foo"
 `;
+
+exports[`markdown semantics List items 282 1`] = `
+"- foo
+-
+- bar"
+`;
+
+exports[`markdown semantics List items 286 1`] = `
+" 1.  A paragraph
+with two lines.
+
+         indented code
+     > A block quote."
+`;
+
+exports[`markdown semantics List items 287 1`] = `
+"  1.  A paragraph
+with two lines.
+
+          indented code
+      > A block quote."
+`;
+
+exports[`markdown semantics List items 288 1`] = `
+"   1.  A paragraph
+with two lines.
+
+           indented code
+       > A block quote."
+`;
+
+exports[`markdown semantics List items 290 1`] = `
+"  1.  A paragraph
+with two lines.
+
+          indented code
+      > A block quote."
+`;
+
+exports[`markdown semantics List items 291 1`] = `
+"  1.  A paragraph
+with two lines."
+`;
+
+exports[`markdown semantics List items 293 1`] = `
+"> 1. > Blockquote
+continued here."
+`;
+
+exports[`markdown semantics List items 299 1`] = `"1. - 1. foo"`;
 
 exports[`markdown semantics Lists 306 1`] = `
 "- foo

@@ -27,8 +27,6 @@ md.renderer = renderer;
 
 // test only rules that are implemented
 const sectionsKeep = new Set([
-    /*
-     */
     'Backslash escapes',
     'Entity and numeric character references',
     'Inlines',
@@ -48,13 +46,11 @@ const sectionsKeep = new Set([
     'Indented code blocks',
     'Fenced code blocks',
     'HTML blocks',
-    'Block quotes',
     'Indented code blocks',
-    // 'Lists',
-    //'List items',
+    'Block quotes',
+    'List items',
 ]);
 
-/*
 export const semanticsTests = new Set([
     // 'Backslash escapes',
     // fence is not implemented
@@ -224,54 +220,28 @@ export const semanticsTests = new Set([
     238, 235,
 
     // 'List items'
-    // empty lines are consumed by the parser, semantics preserved
-    // 262,
-    // empty line between code_block and blockquote start is optional
-    253,
-    // empty lines before paragraph are consumed
-    255,
-    // we render indentation even on empty lines between list item members
-    256, 258,
+    253, 254, 255, 256, 258, 259, 260, 262, 263, 268, 272, 273, 274, 275, 276, 277, 279, 280, 282,
+    286, 287, 288, 290, 291, 293, 299, 306, 307, 308, 309, 312, 314, 315, 316, 317, 319, 325, 326,
+
+    //temp
+    56, 82, 224, 645, 117, 118,
 ]);
-*/
-
-// 318, 320, 321, 312 (?)
-
-// const semanticsTests = new Set([245, 264, 278, 500]);
-// const semanticsTests = new Set([232, 236, 278]);
-
-// todo: 257 276
-// const semanticsTests = new Set([232, 236, 278, 294]);
-// const semanticsTests = new Set([278]);
-
-// const semanticsTests = new Set([278, 260, 294]);
-// const semanticsTests = new Set([232, 236, 245, 260, 264, 278, 281, 282, 284, 294, 500]);
-// const semanticsTests = new Set([298]);
-// const semanticsTests = new Set([281, 282, 284]);
-
-// 260 - blockquote with list item
-// 278 - new line list item
-// 294 - nested lists
-// 282, 284 - empty list
-
-// const semanticsTests = new Set([278, 270, 264]);
-// const semanticsTests = new Set([264]);
-
-const semanticsTests = new Set([
-    // unordered
-    257, 232, 236, 245, 261, 264, 270, 278, 281, 284, 294, 295, 298, 300, 301, 303, 310, 318, 322,
-    323,
-]);
-
-// const semanticsTests = new Set([]);
 
 console.log = (a) => a;
+
 console.info = (a) => a;
+
+// const semanticsTests = new Set([300]);
+// const semanticsTests = new Set([296, 297]);
+//274]);
 
 const units = tests.filter(({section, number}) => {
     const cond = semanticsTests.has(number);
 
-    return cond;
+    // return cond;
+    if (cond) {
+        return false;
+    }
 
     if (!sectionsKeep.has(section)) {
         return false;
