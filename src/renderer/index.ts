@@ -120,42 +120,11 @@ class MarkdownRenderer extends Renderer {
             throw new Error('provide caller token');
         }
 
-        const [callerStart] = caller.map ?? [null, null];
-
         console.info('blockquotes:', this.blockquotes, 'caller:', caller);
 
         if (!this.blockquotes.length) {
             return rendered;
         }
-
-        let lastListIdx = -1;
-        let lastList;
-
-        // find last list
-        // ; i ; -> i>=0
-        // for (let i = this.blockquotes.length - 1; i >= 0; i--) {
-        for (let i = this.blockquotes.length - 1; i >= 0; i--) {
-            if (this.blockquotes[i].type === 'list') {
-                lastListIdx = i;
-                lastList = this.blockquotes[i];
-
-                break;
-            }
-        }
-
-        // count lists nesting
-        const listsCount = this.blockquotes.filter(
-            (blockquote) => blockquote.type === 'list',
-        ).length;
-
-        // console.info(
-        //    'last list:',
-        //    lastList,
-        //    'last list index:',
-        //    lastListIdx,
-        //    'lists count:',
-        //    listsCount,
-        // );
 
         function isBlockquote(blockquote: Blockquote) {
             return blockquote.type === 'blockquote';
@@ -199,7 +168,10 @@ class MarkdownRenderer extends Renderer {
                     `failed to render blockquote: ${blockquoteStr} caller: ${ctxStr} doesn't have map`,
                 );
             }
-            return blockquote.row === start && !blockquote.rendered;
+            return (
+                (blockquote.row === start && !blockquote.rendered) ||
+                (!blockquote.rendered && blockquote.type === 'blockquote')
+            );
         }
 
         function isListItemClose(token: Token) {
@@ -222,10 +194,9 @@ class MarkdownRenderer extends Renderer {
         }
 
         function aligned(left: Blockquote, right: Blockquote) {
-            return left.col + left.tspaces + left.markup.length === right.col - right.lspaces;
+            // return left.col + left.tspaces + left.markup.length === right.col - right.lspaces;
+            return left.col + left.tspaces + left.markup.length >= right.col - right.lspaces;
         }
-
-        // function
 
         for (let i = 0; i < this.blockquotes.length; i++) {
             const blockquote = this.blockquotes[i];
@@ -236,9 +207,6 @@ class MarkdownRenderer extends Renderer {
                 const lspaces = Math.max(blockquote.lspaces - previous.tspaces, 0);
 
                 this.blockquotes[i].lspaces = lspaces;
-
-                // const _lspaces = (this.blockquotes[i].lspaces -= previous.tspaces);
-                console.info(lspaces);
             }
 
             const lspaces = this.blockquotes[i].lspaces;
@@ -379,107 +347,6 @@ class MarkdownRenderer extends Renderer {
             this.blockquotes[i].rendered = true;
 
             console.info(`blockquote rendered: "${rendered}" length: "${rendered.length}"`);
-
-            /*
-            // if not the last list (should be not last list in line)
-            // render list indentation
-            const listIndent =
-                blockquote.type === 'list' &&
-                listsCount > 1 &&
-                i !== lastListIdx &&
-                lastList &&
-                lastList.row !== blockquote.row;
-
-            if (listIndent) {
-                markup = this.SPACE.repeat(blockquote.markup.length);
-            }
-
-            // inside list item, replace markup with space indentation
-            const insideList =
-                blockquote.type === 'list' &&
-                callerStart !== null &&
-                callerStart > blockquote.row &&
-                !blockquote.empty;
-            //&& caller.type !== 'code_block';
-
-            if (insideList) {
-                markup = this.SPACE.repeat(blockquote.markup.length);
-            }
-
-            // handle empty list item
-            if (caller.type === 'list_item_close') {
-                rendered += this.EOL;
-            }
-
-            // render lspaces
-            rendered += this.SPACE.repeat(blockquote.lspaces);
-
-            console.info('list indentation:', listIndent, 'inside list:', insideList);
-
-            // in case of the ordered list first line
-            // render list item order i.e. digits
-            const orderedListDigits =
-                blockquote.type === 'list' &&
-                !blockquote.rendered &&
-                blockquote.listType === 'ordered_list_open';
-            if (orderedListDigits) {
-                rendered += blockquote.order;
-            }
-
-            console.info('ordered list render digits:', orderedListDigits);
-
-            // if (blockquote.type !== 'list' || !blockquote.rendered) {
-            // do not render markup for lists unless it was already rendered or markup
-            // is changed to ' ' which is kinda... the same
-            if (
-                blockquote.type !== 'list' ||
-                !blockquote.rendered ||
-                (markup === ' ' && caller.type !== 'fence')
-            ) {
-                // console.info('render markup', markup, markup.length);
-
-                rendered += markup;
-            }
-
-            if (blockquote.empty && !blockquote.rendered && caller.type !== 'list_item_close') {
-                rendered += this.EOL;
-            }
-
-            const listSpaceCond =
-                blockquote.type === 'list' &&
-                (caller.type === 'paragraph_open' ||
-                    caller.type === 'heading_open' ||
-                    (caller.type === 'code_block' && blockquote.rendered) ||
-                    (caller.type === 'fence' && !blockquote.rendered && !blockquote.empty));
-
-            const blockSpaceCond = blockquote.type === 'blockquote';
-
-            console.info('list space cond:', listSpaceCond, 'block space cond', blockSpaceCond);
-
-            if (listSpaceCond || blockSpaceCond) {
-                // in case of being inside ordered list item
-                // render additional indentation of length of the order
-                // digits amount
-                const orderedListIndent =
-                    blockquote?.listType === 'ordered_list_open' && blockquote.rendered;
-                if (orderedListIndent) {
-                    console.info('rendering additional space', `${blockquote.order}`.length);
-                    rspace += `${blockquote.order}`.length;
-                }
-
-                console.info('ordered list additional space:', orderedListIndent);
-
-                if (blockquote.empty && caller.type === 'code_block') {
-                    rspace = Math.max(0, rspace - 4);
-                }
-
-                rendered += this.SPACE.repeat(rspace);
-            }
-
-            if (!listIndent) {
-                this.blockquotes[i].rendered = true;
-            }
-            */
         }
 
         return rendered;
