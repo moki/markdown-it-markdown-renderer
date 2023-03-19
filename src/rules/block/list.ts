@@ -82,7 +82,20 @@ function listItemOpen(
 
     let tspaces = j - col - 1;
 
-    const empty = line.slice(col).trimEnd().endsWith(markup);
+    const listType = this.lists[this.lists.length - 1]?.type;
+    if (!listType?.length || !isListType(listType)) {
+        throw new Error('failed to render list');
+    }
+
+    let empty = line.slice(col).trimEnd().endsWith(markup);
+
+    let k;
+
+    for (k = col + 1; (line.charAt(k) === ' ' || line.charAt(k) === '\n') && k < line.length; k++);
+
+    if (k !== line.length) {
+        empty = false;
+    }
 
     if (empty) {
         let [next] = source.slice(start + 1, start + 2);
@@ -94,11 +107,6 @@ function listItemOpen(
         for (j = 0; next.charAt(j) === ' ' && j < next.length; j++);
 
         tspaces = j;
-    }
-
-    const listType = this.lists[this.lists.length - 1]?.type;
-    if (!listType?.length || !isListType(listType)) {
-        throw new Error('failed to render list');
     }
 
     const parsed: Blockquote = {
