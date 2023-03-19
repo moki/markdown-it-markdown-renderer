@@ -26,8 +26,8 @@ exports[`markdown semantics ATX headings 72 1`] = `
 exports[`markdown semantics ATX headings 73 1`] = `"### foo"`;
 
 exports[`markdown semantics ATX headings 79 1`] = `
-"## 
-# 
+"##
+#
 ### "
 `;
 
@@ -87,7 +87,7 @@ bar"
 
 exports[`markdown semantics Block quotes 244 1`] = `
 "> foo
-> 
+>
 > bar"
 `;
 
@@ -379,7 +379,7 @@ exports[`markdown semantics Images 592 1`] = `"\\\\![foo](/url \\"title\\")"`;
 
 exports[`markdown semantics Indented code blocks 108 1`] = `
 "  - foo
-    
+
     bar"
 `;
 
@@ -575,19 +575,19 @@ two"
 
 exports[`markdown semantics List items 256 1`] = `
 "- one
-  
+
   two"
 `;
 
 exports[`markdown semantics List items 258 1`] = `
 " -    one
-      
+
       two"
 `;
 
 exports[`markdown semantics List items 259 1`] = `
 "> >  1.  one
-> >      
+> >
 > >      two"
 `;
 
@@ -599,7 +599,7 @@ exports[`markdown semantics List items 260 1`] = `
 
 exports[`markdown semantics List items 262 1`] = `
 "- foo
-  
+
   bar"
 `;
 
@@ -649,7 +649,7 @@ bar"
 
 exports[`markdown semantics List items 277 1`] = `
 "-  foo
-   
+
    bar"
 `;
 
@@ -724,7 +724,7 @@ exports[`markdown semantics Lists 307 1`] = `
 "- foo
   - bar
     - baz
-      
+
       bim"
 `;
 
@@ -738,12 +738,18 @@ exports[`markdown semantics Lists 308 1`] = `
 
 exports[`markdown semantics Lists 309 1`] = `
 "-   foo
-    
+
     notcode
 -   foo
 <!-- -->
 
     code"
+`;
+
+exports[`markdown semantics Lists 311 1`] = `
+"1. a
+  2. b
+   3. c"
 `;
 
 exports[`markdown semantics Lists 312 1`] = `
@@ -752,6 +758,12 @@ exports[`markdown semantics Lists 312 1`] = `
   - c
    - d
 - e"
+`;
+
+exports[`markdown semantics Lists 313 1`] = `
+"1. a
+  2. b
+    3. c"
 `;
 
 exports[`markdown semantics Lists 314 1`] = `
@@ -769,7 +781,7 @@ exports[`markdown semantics Lists 315 1`] = `
 exports[`markdown semantics Lists 316 1`] = `
 "- a
 - b
-  
+
   c
 - d"
 `;
@@ -783,15 +795,28 @@ exports[`markdown semantics Lists 317 1`] = `
 exports[`markdown semantics Lists 319 1`] = `
 "- a
   - b
-    
+
     c
 - d"
+`;
+
+exports[`markdown semantics Lists 320 1`] = `
+"* a
+  > b
+* c"
+`;
+
+exports[`markdown semantics Lists 324 1`] = `
+"1. \`\`\`
+   foo
+   \`\`\`
+   bar"
 `;
 
 exports[`markdown semantics Lists 325 1`] = `
 "* foo
   * bar
-  
+
   baz"
 `;
 
