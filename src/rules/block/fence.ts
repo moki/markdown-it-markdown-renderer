@@ -90,8 +90,6 @@ function fenceHandler(
         rendered += this.renderBlockquote(tokens[i]);
         rendered += closeMarkup;
     } else {
-        // rendered += this.renderBlockquote(tokens[i]);
-
         rendered += this.SPACE.repeat(openIndent);
         rendered += openMarkup;
 
@@ -107,7 +105,6 @@ function fenceHandler(
             rendered += this.EOL;
         }
 
-        // rendered += this.renderBlockquote(tokens[i]);
         rendered += this.SPACE.repeat(closeIndent);
         rendered += closeMarkup;
     }

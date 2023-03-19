@@ -10,14 +10,6 @@ import {MarkdownRenderer, MarkdownRendererEnv, Blockquote, isListType} from 'src
 export function consumeList(line: string, i: number, blockquote: Blockquote) {
     const cursor = i;
 
-    /*
-    if (row === blockquote.row) {
-        console.info('cursor before:', cursor);
-        cursor = blockquote.col + 1;
-        console.info('cursor after:', cursor);
-    }
-    */
-
     const col = line.indexOf(blockquote.markup, cursor);
     if (col === -1) {
         throw new Error('failed to render list');
@@ -122,8 +114,6 @@ function listItemOpen(
     };
 
     if (listType === 'ordered_list_open') {
-        // const match = (line + '\n').match(/\d+\.\s/);
-        // const match = line.match(/\d+\.(?:\s+|$)/);
         const match = line.match(/(\d+)(?:\.|\)\s+|$)/);
         // eslint-disable-next-line eqeqeq, no-eq-null
         if (!match || match.index == null || match[1] == null) {
@@ -132,13 +122,11 @@ function listItemOpen(
 
         const order = parseInt(match[1], 10);
 
-        // if (match && match.index && match.index >= col) {
         if (isNaN(order) || match.index >= col) {
             throw new Error('failed to render list');
         }
 
         parsed.order = order;
-        // parsed.order = parseInt(match[0], 10);
     }
 
     this.blockquotes.push(parsed);
@@ -146,13 +134,7 @@ function listItemOpen(
     return '';
 }
 
-function listItemClose(
-    this: MarkdownRenderer,
-    tokens: Token[],
-    i: number,
-    // options: Options,
-    // env: MarkdownRendererEnv,
-) {
+function listItemClose(this: MarkdownRenderer, tokens: Token[], i: number) {
     let rendered = '';
 
     const blockquotesLen = this.blockquotes.length;
@@ -166,13 +148,7 @@ function listItemClose(
     return rendered;
 }
 
-function listOpen(
-    this: MarkdownRenderer,
-    tokens: Token[],
-    i: number,
-    // options: Options,
-    // env: MarkdownRendererEnv,
-) {
+function listOpen(this: MarkdownRenderer, tokens: Token[], i: number) {
     // remember list openping token
     // helps make decisions during list item parsing
     this.lists.push(tokens[i]);
@@ -180,13 +156,7 @@ function listOpen(
     return '';
 }
 
-function listClose(
-    this: MarkdownRenderer,
-    // tokens: Token[],
-    // i: number,
-    // options: Options,
-    // env: MarkdownRendererEnv,
-) {
+function listClose(this: MarkdownRenderer) {
     // forget list openping token
     this.lists.pop();
 

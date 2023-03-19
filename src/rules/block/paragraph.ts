@@ -9,7 +9,6 @@ const separate = new Set([
     'paragraph_close',
     'bullet_list_close',
     'ordered_list_close',
-    // 'list_item_close',
     'html_block',
 ]);
 

@@ -30,15 +30,6 @@ const code: Renderer.RenderRuleRecord = {
             rendered += this.EOL.repeat(height);
         }
 
-        /*
-        if (this.blockquotes.length) {
-            const last = this.blockquotes[this.blockquotes.length - 1];
-            if (last.type === 'list' && !last.rendered) {
-                this.blockquotes[this.blockquotes.length - 1].tspaces -= 4;
-            }
-        }
-        */
-
         let indentation = 0;
 
         // determine indentation
