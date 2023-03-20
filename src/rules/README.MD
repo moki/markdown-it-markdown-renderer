@@ -6,4 +6,4 @@ each module here exports `markdown-it` [RenderRuleRecord](https://github.com/Def
 
 ## Overview
 
-- [inline](inline/README.md)
+- [inline](inline/README.MD)
