@@ -8,50 +8,36 @@ supporting syntax from the [commonmark specification](https://spec.commonmark.or
 
 - [rules](src/rules/README.MD)
 - [renderer](src/renderer/README.MD)
+- [plugin](src/renderer/README.MD)
 
 ## Usage
 
-### Overwrite default renderer
+### Plugin
 
-`markdown-it` renderer can be overwriten with custom one like this:
-
-```
-import MarkdownIt from 'markdown-it';
-
-import {MarkdownRenderer, MarkdownRendererMode} from './src/index';
-
-// create markdown instance
-const md = new MarkdownIt('commonmark');
-
-// create instance of our custom renderer
-const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Development});
-
-// overwrite markdown-it default renderer with custom one
-md.renderer = renderer;
-```
-
-now we can render markdown string back into markdown string with `markdown-it` instance
-
-```
-const markdown = '[markdown link](folder/file.md "title")';
-
-md.render(markdown);
-```
-
-### Direct application on tokens
-
-use custom `markdown-it` renderer `render` method to render markdown-it `tokens`
+Plugin interface allows you to configure your markdown-it instance with plugin to
+use [renderer](src/renderer/README.MD) to render into **markdown** instead of the **html**.
 
 ```
 import MarkdownIt from 'markdown-it';
-import {MarkdownRenderer, MarkdownRendererMode} from './src/index';
 
-// create instance of out custom renderer
-const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Development});
+import {MarkdownRendererEnv} from 'src/renderer';
+import {mdRenderer} from 'src/plugin';
 
-// tokens parsed by markdown-it
-const tokens = [...];
+const md = new MarkdownIt('commonmark', {html: true});
 
-// directly call render on parsed tokens
-const rendered = renderer.render(tokens, {}, {});
+md.use(mdRenderer);
+```
+
+Markdown renderer needs additional information parsed from the document
+
+For that reason we require you to provide, `MarkdownRendererEnv` described in the [renderer](src/renderer/README.MD) module.
+
+`source` - is original markdown string split by new lines
+
+```
+const markdown = '# Title\nparagraph goes **here**\n- list item one\n- list item two\n';
+
+const env: MarkdownRendererEnv = {source: markdown.split('\n')};
+
+const rendered = md.render(markdown, env);
 ```
