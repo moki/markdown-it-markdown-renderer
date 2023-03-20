@@ -1,6 +1,2 @@
-export type CommonMarkSpecEntry = {
-    section: string;
-    number: number;
-    markdown: string;
-    html: string;
-};
+export {CommonMarkSpecEntry} from './types';
+export {sections, semantics} from './commonmark';
