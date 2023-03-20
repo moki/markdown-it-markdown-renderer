@@ -1,36 +1,19 @@
 import MarkdownIt from 'markdown-it';
-import {MarkdownRenderer, MarkdownRendererEnv, MarkdownRendererMode} from 'src/renderer';
+import {MarkdownRendererEnv} from 'src/renderer';
 import {tests} from 'commonmark-spec';
 
+import {mdRenderer} from 'src/plugin';
 import {semantics, CommonMarkSpecEntry} from './__fixtures__';
 import {normalizeMD} from '__tests__/__helpers__';
 
-const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Production});
-
 const md = new MarkdownIt('commonmark', {html: true});
 
-// todo: refactor into new interface
-// helpers
-// always evaluate to provided value <v>
-const always = (v: boolean) => () => v;
-// always return input value <a> as a result
-const id = (a: string) => a;
-
-// modify markdown-it parser behaviour
-// disable escape rule
-md.inline.ruler.at('escape', always(false));
-// disable entity rule
-md.inline.ruler.at('entity', always(false));
-// disable links normalization
-md.normalizeLink = id;
-
-// @ts-ignore
-md.renderer = renderer;
+md.use(mdRenderer);
 
 const units = tests.filter(({number}) => semantics.has(number));
 
 // todo: remove unnecessary logging
-// for now suppress it
+// for now suppress them
 console.log = (a) => a;
 console.info = (a) => a;
 

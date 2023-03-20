@@ -1,31 +1,19 @@
 import MarkdownIt from 'markdown-it';
-import {MarkdownRenderer, MarkdownRendererEnv, MarkdownRendererMode} from 'src/renderer';
+import {MarkdownRendererEnv} from 'src/renderer';
 import {tests} from 'commonmark-spec';
 
+import {mdRenderer} from 'src/plugin';
 import {sections, semantics, CommonMarkSpecEntry} from './__fixtures__';
 import {normalizeMD} from '__tests__/__helpers__';
 
-const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Production});
-
 const md = new MarkdownIt('commonmark', {html: true});
 
-// todo: refactor into new interface
-// helpers
-// always evaluate to provided value <v>
-const always = (v: boolean) => () => v;
-// always return input value <a> as a result
-const id = (a: string) => a;
+md.use(mdRenderer);
 
-// modify markdown-it parser behaviour
-// disable escape rule
-md.inline.ruler.at('escape', always(false));
-// disable entity rule
-md.inline.ruler.at('entity', always(false));
-// disable links normalization
-md.normalizeLink = id;
-
-// @ts-ignore
-md.renderer = renderer;
+// todo: remove unnecessary logging
+// for now suppress them
+console.info = (a) => a;
+console.log = (a) => a;
 
 const units = tests.filter(({section, number}) => {
     if (semantics.has(number)) {
@@ -42,11 +30,6 @@ const units = tests.filter(({section, number}) => {
 
     return true;
 });
-
-// todo: remove unnecessary logging
-// for now suppress it
-console.info = (a) => a;
-console.log = (a) => a;
 
 describe('markdown zero diff', () => {
     units.forEach((entry: CommonMarkSpecEntry) => {
