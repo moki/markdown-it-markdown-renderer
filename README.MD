@@ -8,7 +8,7 @@ supporting syntax from the [commonmark specification](https://spec.commonmark.or
 
 - [rules](src/rules/README.MD)
 - [renderer](src/renderer/README.MD)
-- [plugin](src/renderer/README.MD)
+- [plugin](src/plugin/README.MD)
 
 ## Usage
 
