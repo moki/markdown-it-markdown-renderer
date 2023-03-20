@@ -1,8 +1,6 @@
 import type MarkdownIt from 'markdown-it';
 import {MarkdownRenderer, MarkdownRendererParams} from 'src/renderer';
 
-// import type {PluginWithOptions} from 'markdown-it';
-
 // helpers
 // always evaluate to provided value <v>
 const always = (v: boolean) => () => v;
