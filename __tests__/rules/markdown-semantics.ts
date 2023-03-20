@@ -2,14 +2,14 @@ import MarkdownIt from 'markdown-it';
 import {MarkdownRenderer, MarkdownRendererEnv, MarkdownRendererMode} from 'src/renderer';
 import {tests} from 'commonmark-spec';
 
-import {semanticsTests} from './markdown-zero-diff';
-
-import {CommonMarkSpecEntry} from './__fixtures__';
+import {semantics, CommonMarkSpecEntry} from './__fixtures__';
+import {normalizeMD} from '__tests__/__helpers__';
 
 const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Production});
 
 const md = new MarkdownIt('commonmark', {html: true});
 
+// todo: refactor into new interface
 // helpers
 // always evaluate to provided value <v>
 const always = (v: boolean) => () => v;
@@ -27,11 +27,10 @@ md.normalizeLink = id;
 // @ts-ignore
 md.renderer = renderer;
 
-const units = tests.filter(({number}) => semanticsTests.has(number));
+const units = tests.filter(({number}) => semantics.has(number));
 
-const filterOutEmptyFstLst = (line, i, ls) => (i && i + 1 !== ls.length) || line.trim().length;
-const normalizeMD = (str: string) => str.split('\n').filter(filterOutEmptyFstLst).join('\n');
-
+// todo: remove unnecessary logging
+// for now suppress it
 console.log = (a) => a;
 console.info = (a) => a;
 
