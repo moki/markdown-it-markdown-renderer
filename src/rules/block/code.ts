@@ -47,10 +47,10 @@ const code: Renderer.RenderRuleRecord = {
 
         const contentLines = content.split('\n');
 
-        if (this.blockquotes.length) {
+        if (this.containers.length) {
             for (const line of contentLines) {
                 if (line.length) {
-                    rendered += this.renderBlockquote(tokens[i]);
+                    rendered += this.renderContainer(tokens[i]);
                 }
 
                 rendered += line;

@@ -72,8 +72,8 @@ function fenceHandler(
         }
     }
 
-    if (this.blockquotes.length) {
-        rendered += this.renderBlockquote(tokens[i]);
+    if (this.containers.length) {
+        rendered += this.renderContainer(tokens[i]);
         rendered += openMarkup;
 
         if (info?.length) {
@@ -87,7 +87,7 @@ function fenceHandler(
             rendered += this.EOL;
         }
 
-        rendered += this.renderBlockquote(tokens[i]);
+        rendered += this.renderContainer(tokens[i]);
         rendered += closeMarkup;
     } else {
         rendered += this.SPACE.repeat(openIndent);

@@ -34,7 +34,7 @@ export type ListType = 'ordered_list_open' | 'bullet_list_open';
 export const isListType = (tokenType: any): tokenType is ListType =>
     tokenType === 'ordered_list_open' || tokenType === 'bullet_list_open';
 
-export type Blockquote = {
+export type Container = {
     listType?: ListType;
     order?: number;
     lspaces: number;
@@ -66,20 +66,18 @@ class MarkdownRenderer extends Renderer {
         };
     }
 
-    // render pending tokens stack
-    protected pending: Token[];
-
     // constants
     // end of line used by renderer
     protected EOL: string;
     // space used by renderer
     protected SPACE: string;
-    // blockquotes
-    protected blockquotes: Array<Blockquote>;
+
+    // pending tokens stack
+    protected pending: Token[];
+
+    // containers
+    protected containers: Array<Container>;
     protected lists: Array<Token>;
-    // flag to detect if we rendered blockquote markup
-    // before finding blockquote_close
-    protected renderedBlockquote: boolean;
 
     // renderer mode
     private mode: MarkdownRendererMode;
@@ -98,144 +96,148 @@ class MarkdownRenderer extends Renderer {
             console.debug(`${this.constructor.name}: instantiated in the debug mode`);
         }
 
-        this.pending = [];
-
         this.EOL = EOL;
         this.SPACE = SPACE;
 
-        // blockquotes state
-        this.blockquotes = new Array<Blockquote>();
-        this.renderedBlockquote = false;
+        this.pending = [];
+        this.containers = new Array<Container>();
         this.lists = new Array<Token>();
 
         this.setRules({...MarkdownRenderer.defaultRules, ...customRules});
     }
 
-    // blockquotes methods
+    isBlockquote(blockquote: Container) {
+        return blockquote.type === 'blockquote';
+    }
+
+    isOrderedList(blockquote: Container) {
+        return this.isList(blockquote) && blockquote.listType === 'ordered_list_open';
+    }
+
+    isUnorderedList(blockquote: Container) {
+        return this.isList(blockquote) && blockquote.listType === 'bullet_list_open';
+    }
+
+    isList(blockquote: Container) {
+        return blockquote.type === 'list';
+    }
+
+    isTail(blockquote: Container, ctx: Token) {
+        const [start] = ctx?.map ?? [null];
+        // eslint-disable-next-line eqeqeq, no-eq-null
+        if (start == null) {
+            const blockquoteStr = JSON.stringify(blockquote);
+            const ctxStr = JSON.stringify(ctx);
+            throw new Error(
+                `failed to render blockquote: ${blockquoteStr} caller: ${ctxStr} doesn't have map`,
+            );
+        }
+
+        // >= instead of > because we can open markup on the same line as list
+        // as an example with ``` and then span inside the list with fences content
+        return start >= blockquote.row && blockquote.rendered;
+    }
+
+    isFst(blockquote: Container, ctx: Token) {
+        const [start] = ctx?.map ?? [null];
+        // eslint-disable-next-line eqeqeq, no-eq-null
+        if (start == null) {
+            const blockquoteStr = JSON.stringify(blockquote);
+            const ctxStr = JSON.stringify(ctx);
+            throw new Error(
+                `failed to render blockquote: ${blockquoteStr} caller: ${ctxStr} doesn't have map`,
+            );
+        }
+        return (
+            (blockquote.row === start && !blockquote.rendered) ||
+            (!blockquote.rendered && blockquote.type === 'blockquote')
+        );
+    }
+
+    isListItemClose(token: Token) {
+        return token.type === 'list_item_close';
+    }
+
+    isBlockquoteClose(token: Token) {
+        return token.type === 'blockquote_close';
+    }
+
+    isEmpty(blockquote: Container) {
+        return blockquote.empty;
+    }
+
+    isCode(token: Token) {
+        return token.type === 'code_block';
+    }
+
+    sameRow(left: Container, right: Container) {
+        return left.row === right.row;
+    }
+
+    aligned(left: Container, right: Container) {
+        // return left.col + left.tspaces + left.markup.length === right.col - right.lspaces;
+        return left.col + left.tspaces + left.markup.length >= right.col - right.lspaces;
+    }
+
+    // containers methods
     // eslint-disable-next-line complexity
-    renderBlockquote(caller: Token): string {
+    renderContainer(caller: Token): string {
         let rendered = '';
 
         if (!caller) {
             throw new Error('provide caller token');
         }
 
-        console.info('blockquotes:', this.blockquotes, 'caller:', caller);
+        // console.info('containers:', this.containers, 'caller:', caller);
 
-        if (!this.blockquotes.length) {
+        if (!this.containers.length) {
             return rendered;
         }
 
-        function isBlockquote(blockquote: Blockquote) {
-            return blockquote.type === 'blockquote';
-        }
-
-        function isOrderedList(blockquote: Blockquote) {
-            return isList(blockquote) && blockquote.listType === 'ordered_list_open';
-        }
-
-        function isUnorderedList(blockquote: Blockquote) {
-            return isList(blockquote) && blockquote.listType === 'bullet_list_open';
-        }
-
-        function isList(blockquote: Blockquote) {
-            return blockquote.type === 'list';
-        }
-
-        function isTail(blockquote: Blockquote, ctx: Token) {
-            const [start] = caller?.map ?? [null];
-            // eslint-disable-next-line eqeqeq, no-eq-null
-            if (start == null) {
-                const blockquoteStr = JSON.stringify(blockquote);
-                const ctxStr = JSON.stringify(ctx);
-                throw new Error(
-                    `failed to render blockquote: ${blockquoteStr} caller: ${ctxStr} doesn't have map`,
-                );
-            }
-
-            // >= instead of > because we can open markup on the same line as list
-            // as an example with ``` and then span inside the list with fences content
-            return start >= blockquote.row && blockquote.rendered;
-        }
-
-        function isFst(blockquote: Blockquote, ctx: Token) {
-            const [start] = caller?.map ?? [null];
-            // eslint-disable-next-line eqeqeq, no-eq-null
-            if (start == null) {
-                const blockquoteStr = JSON.stringify(blockquote);
-                const ctxStr = JSON.stringify(ctx);
-                throw new Error(
-                    `failed to render blockquote: ${blockquoteStr} caller: ${ctxStr} doesn't have map`,
-                );
-            }
-            return (
-                (blockquote.row === start && !blockquote.rendered) ||
-                (!blockquote.rendered && blockquote.type === 'blockquote')
-            );
-        }
-
-        function isListItemClose(token: Token) {
-            return token.type === 'list_item_close';
-        }
-        function isBlockquoteClose(token: Token) {
-            return token.type === 'blockquote_close';
-        }
-
-        function isEmpty(blockquote: Blockquote) {
-            return blockquote.empty;
-        }
-
-        function isCode(token: Token) {
-            return token.type === 'code_block';
-        }
-
-        function sameRow(left: Blockquote, right: Blockquote) {
-            return left.row === right.row;
-        }
-
-        function aligned(left: Blockquote, right: Blockquote) {
-            // return left.col + left.tspaces + left.markup.length === right.col - right.lspaces;
-            return left.col + left.tspaces + left.markup.length >= right.col - right.lspaces;
-        }
-
-        for (let i = 0; i < this.blockquotes.length; i++) {
-            const blockquote = this.blockquotes[i];
-            const previous = this.blockquotes[i - 1];
+        for (let i = 0; i < this.containers.length; i++) {
+            const blockquote = this.containers[i];
+            const previous = this.containers[i - 1];
             const {markup, tspaces, order} = blockquote;
 
-            if (i && sameRow(previous, blockquote) && aligned(previous, blockquote)) {
+            // common behaviour between containers
+            // merge left trailling spaces and right leading spaces
+            if (i && this.sameRow(previous, blockquote) && this.aligned(previous, blockquote)) {
                 const lspaces = Math.max(blockquote.lspaces - previous.tspaces, 0);
 
-                this.blockquotes[i].lspaces = lspaces;
+                this.containers[i].lspaces = lspaces;
             }
 
-            const lspaces = this.blockquotes[i].lspaces;
+            const lspaces = this.containers[i].lspaces;
 
+            // common behaviour render leading spaces
             rendered += this.SPACE.repeat(lspaces);
 
-            // empty blockquote
-            if (isBlockquoteClose(caller) && !blockquote.rendered) {
+            // only one of the handlers should be ran for the container
+            // handle empty blockquote
+            if (this.isBlockquoteClose(caller) && !blockquote.rendered) {
                 rendered += this.EOL;
                 rendered += markup;
             }
-            // empty list item
-            else if (isListItemClose(caller) && !blockquote.rendered) {
-                if (isOrderedList(blockquote)) {
+            // handle empty list item
+            else if (this.isListItemClose(caller) && !blockquote.rendered) {
+                if (this.isOrderedList(blockquote)) {
                     rendered += this.EOL;
                     rendered += order;
                     rendered += markup;
-                } else if (isUnorderedList(blockquote)) {
+                } else if (this.isUnorderedList(blockquote)) {
                     rendered += this.EOL;
                     rendered += markup;
                 } else {
                     throw new Error('empty list not ordered and not unordered');
                 }
-            } else if (isOrderedList(blockquote)) {
-                if (isFst(blockquote, caller) && !isEmpty(blockquote)) {
-                    console.info('ordered fst');
+            }
+            // handle ordered list
+            else if (this.isOrderedList(blockquote)) {
+                if (this.isFst(blockquote, caller) && !this.isEmpty(blockquote)) {
+                    // console.info('ordered fst');
 
                     let codeIndent = 0;
-                    if (isCode(caller) && !isEmpty(blockquote)) {
+                    if (this.isCode(caller) && !this.isEmpty(blockquote)) {
                         const codeFstLine = caller.content.split('\n')[0] ?? '';
 
                         codeIndent = codeFstLine.length - codeFstLine.trim().length;
@@ -245,13 +247,13 @@ class MarkdownRenderer extends Renderer {
                     rendered += markup;
                     rendered += this.SPACE.repeat(tspaces - codeIndent);
 
-                    if (isCode(caller) && !isEmpty(blockquote)) {
-                        console.info('ordered fst code_block not empty');
+                    if (this.isCode(caller) && !this.isEmpty(blockquote)) {
+                        // console.info('ordered fst code_block not empty');
 
-                        this.blockquotes[i].tspaces = this.blockquotes[i].tspaces - 4 - codeIndent;
+                        this.containers[i].tspaces = this.containers[i].tspaces - 4 - codeIndent;
                     }
-                } else if (isTail(blockquote, caller)) {
-                    console.info('ordered tail');
+                } else if (this.isTail(blockquote, caller)) {
+                    // console.info('ordered tail');
                     let indentation = 0;
 
                     const orderLen = `${order}`.length;
@@ -259,22 +261,22 @@ class MarkdownRenderer extends Renderer {
                     // indent with spaces of length of the markup and order string
                     // but only in the case of the content going on the new line
                     // after list open
-                    if (!isEmpty(blockquote)) {
+                    if (!this.isEmpty(blockquote)) {
                         indentation += orderLen;
                         indentation += markup.length;
                     }
 
                     indentation += tspaces;
 
-                    if (isCode(caller)) {
+                    if (this.isCode(caller)) {
                         indentation += 4;
                     }
 
                     rendered += this.SPACE.repeat(indentation);
                     // first line was empty
                     // render empty open markup new line and indentation
-                } else if (isEmpty(blockquote) && !blockquote.rendered) {
-                    console.info('ordered empty fst');
+                } else if (this.isEmpty(blockquote) && !blockquote.rendered) {
+                    // console.info('ordered empty fst');
                     rendered += order;
                     rendered += markup;
                     rendered += this.EOL;
@@ -287,23 +289,25 @@ class MarkdownRenderer extends Renderer {
                 } else {
                     throw new Error('ordered list not fst not tail - undefined behaviour');
                 }
-            } else if (isUnorderedList(blockquote)) {
-                if (isFst(blockquote, caller) && !isEmpty(blockquote)) {
-                    console.info('unordered fst not empty');
+            }
+            // handle unordered list
+            else if (this.isUnorderedList(blockquote)) {
+                if (this.isFst(blockquote, caller) && !this.isEmpty(blockquote)) {
+                    // console.info('unordered fst not empty');
                     rendered += markup;
                     rendered += this.SPACE.repeat(tspaces);
-                } else if (isTail(blockquote, caller)) {
-                    console.info('unordered tail');
+                } else if (this.isTail(blockquote, caller)) {
+                    // console.info('unordered tail');
                     let indentation = 0;
 
                     // indent with spaces of length of the markup
                     // but only in the case of the content going on the new line
                     // after list open
-                    if (!isEmpty(blockquote)) {
+                    if (!this.isEmpty(blockquote)) {
                         indentation += markup.length;
                     }
 
-                    if (isCode(caller)) {
+                    if (this.isCode(caller)) {
                         indentation += 4;
                     }
 
@@ -313,8 +317,8 @@ class MarkdownRenderer extends Renderer {
 
                     // first line was empty
                     // render empty open markup new line and indentation
-                } else if (isEmpty(blockquote) && !blockquote.rendered) {
-                    console.info('empty fst');
+                } else if (this.isEmpty(blockquote) && !blockquote.rendered) {
+                    // console.info('empty fst');
                     rendered += markup;
                     rendered += this.EOL;
 
@@ -326,17 +330,19 @@ class MarkdownRenderer extends Renderer {
                 } else {
                     throw new Error('unordered list not fst not tail - undefined behaviour');
                 }
-            } else if (isBlockquote(blockquote)) {
-                if (isFst(blockquote, caller)) {
-                    console.info('blockquote fst');
+            }
+            // handle blockquote
+            else if (this.isBlockquote(blockquote)) {
+                if (this.isFst(blockquote, caller)) {
+                    // console.info('blockquote fst');
                     rendered += markup;
                     rendered += this.SPACE.repeat(tspaces);
-                } else if (isTail(blockquote, caller)) {
-                    console.info('blockquote tail');
+                } else if (this.isTail(blockquote, caller)) {
+                    // console.info('blockquote tail');
                     rendered += markup;
                     rendered += this.SPACE.repeat(tspaces);
                     // first line empty blockquote
-                } else if (isEmpty(blockquote) && !blockquote.rendered) {
+                } else if (this.isEmpty(blockquote) && !blockquote.rendered) {
                     rendered += markup;
                     rendered += this.EOL;
                 } else {
@@ -344,11 +350,14 @@ class MarkdownRenderer extends Renderer {
                 }
             }
 
-            this.blockquotes[i].rendered = true;
+            // common behaviour between containers
+            // mark container as rendered
+            this.containers[i].rendered = true;
 
-            console.info(`blockquote rendered: "${rendered}" length: "${rendered.length}"`);
+            // console.info(`blockquote rendered: "${rendered}" length: "${rendered.length}"`);
         }
 
+        // returns result of running one of the handlers
         return rendered;
     }
 
