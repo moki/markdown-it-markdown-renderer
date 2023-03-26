@@ -2,11 +2,11 @@ import {Options} from 'markdown-it';
 import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {MarkdownRenderer, MarkdownRendererEnv, Blockquote} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv, Container} from 'src/renderer';
 
 import {consumeList} from './list';
 
-export function consumeBlockquote(line: string, i: number, blockquote: Blockquote) {
+export function consumeBlockquote(line: string, i: number, blockquote: Container) {
     let cursor = i ?? 0;
 
     const index = line.indexOf(blockquote.markup, cursor);
@@ -43,12 +43,12 @@ const blockquote: Renderer.RenderRuleRecord = {
             throw new Error('failed to render blockquote');
         }
 
-        // consume parsed blockquotes constructs from this line
-        // const nesting = this.blockquotes.length;
+        // consume parsed containers constructs from this line
+        // const nesting = this.containers.length;
 
         let j = 0;
 
-        for (const quote of this.blockquotes) {
+        for (const quote of this.containers) {
             if (quote.type === 'list' && quote.row === start) {
                 j = consumeList(line, j, quote);
 
@@ -60,7 +60,7 @@ const blockquote: Renderer.RenderRuleRecord = {
             }
         }
 
-        if (this.blockquotes.length === 1) {
+        if (this.containers.length === 1) {
             j = 0;
         }
 
@@ -72,7 +72,7 @@ const blockquote: Renderer.RenderRuleRecord = {
         // scan for the tsapces
         for (j = col + 1; line.charAt(j) === ' ' && j < line.length; j++);
 
-        this.blockquotes.push({
+        this.containers.push({
             type: 'blockquote',
             lspaces: 0,
             tspaces: j - col - 1,
@@ -82,74 +82,19 @@ const blockquote: Renderer.RenderRuleRecord = {
             rendered: false,
         });
 
-        this.renderedBlockquote = false;
-
-        // prevent blockquotes from sticking to each other
+        // prevent containers from sticking to each other
         return i && tokens[i - 1].type === 'blockquote_close' ? this.EOL : '';
-        // return '';
-
-        // find column index of the blockquote markup open syntax
-        //
-        // we found this.blocksquotes.length blockquotes so far
-        // scan line for the next markup open syntax for this token
-        // push it on the blockquotes stack with the information about:
-        // <row>    - line mapping into original markdown string
-        // <col>    - char mapping into original markdown string
-        // <tsapces> - amount of indentation after open markup syntax
-
-        /*
-        const nesting = this.blockquotes.length;
-        const markups = this.blockquotes.map((bq) => bq.markup);
-        if (!markups.includes(markup)) {
-            markups.push(markup);
-        }
-
-        let found = 0;
-        let j;
-
-        // scan for the markup
-        for (j = 0; j < line.length; j++) {
-            found += line.charAt(j) === markup ? 1 : 0;
-
-            if (found > nesting) {
-                break;
-            }
-        }
-
-        if (j === line.length) {
-            throw new Error('failed render blockquote');
-        }
-
-        const col = j;
-
-        // scan for the tsapces
-        for (j = j + 1; line.charAt(j) === ' ' && j < line.length; j++);
-
-        const tsapces = j - col - 1;
-
-        this.blockquotes.push({row: start, col, tsapces, markup, rendered: false});
-
-        // remember token that blockquote follows
-        // to make decisions about vertical gap rendering later
-        if (i) {
-            this.pending.push(tokens[i - 1]);
-        }
-
-        this.renderedBlockquote = false;
-
-        return '';
-        */
     },
     blockquote_close: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         let rendered = '';
 
-        const blockquotesLen = this.blockquotes.length;
+        const containersLen = this.containers.length;
 
-        if (blockquotesLen && !this.blockquotes[blockquotesLen - 1].rendered) {
-            rendered += this.renderBlockquote(tokens[i]);
+        if (containersLen && !this.containers[containersLen - 1].rendered) {
+            rendered += this.renderContainer(tokens[i]);
         }
 
-        this.blockquotes.pop();
+        this.containers.pop();
 
         return rendered;
     },

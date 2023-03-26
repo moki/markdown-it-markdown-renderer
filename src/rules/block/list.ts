@@ -4,10 +4,10 @@ import Token from 'markdown-it/lib/token';
 
 import {consumeBlockquote} from './blockquote';
 
-import {MarkdownRenderer, MarkdownRendererEnv, Blockquote, isListType} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv, Container, isListType} from 'src/renderer';
 
-// export function consumeList(line: string, i: number, blockquote: Blockquote, row: number) {
-export function consumeList(line: string, i: number, blockquote: Blockquote) {
+// export function consumeList(line: string, i: number, blockquote: Container, row: number) {
+export function consumeList(line: string, i: number, blockquote: Container) {
     const cursor = i;
 
     const col = line.indexOf(blockquote.markup, cursor);
@@ -53,7 +53,7 @@ function listItemOpen(
 
     let j = 0;
 
-    for (const quote of this.blockquotes) {
+    for (const quote of this.containers) {
         if (quote.type === 'blockquote') {
             j = consumeBlockquote(line, j, quote);
         } else if (quote.type === 'list') {
@@ -109,7 +109,7 @@ function listItemOpen(
         tspaces = j;
     }
 
-    const parsed: Blockquote = {
+    const parsed: Container = {
         rendered: false,
         type: 'list',
         row: start,
@@ -137,7 +137,7 @@ function listItemOpen(
         parsed.order = order;
     }
 
-    this.blockquotes.push(parsed);
+    this.containers.push(parsed);
 
     return '';
 }
@@ -145,13 +145,13 @@ function listItemOpen(
 function listItemClose(this: MarkdownRenderer, tokens: Token[], i: number) {
     let rendered = '';
 
-    const blockquotesLen = this.blockquotes.length;
+    const containersLen = this.containers.length;
 
-    if (blockquotesLen && !this.blockquotes[blockquotesLen - 1].rendered) {
-        rendered += this.renderBlockquote(tokens[i]);
+    if (containersLen && !this.containers[containersLen - 1].rendered) {
+        rendered += this.renderContainer(tokens[i]);
     }
 
-    this.blockquotes.pop();
+    this.containers.pop();
 
     return rendered;
 }

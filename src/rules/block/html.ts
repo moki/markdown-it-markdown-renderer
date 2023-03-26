@@ -17,7 +17,7 @@ const html: Renderer.RenderRuleRecord = {
                 previous?.type === 'code_block' ||
                 previous?.type === 'html_block' ||
                 previous?.type === 'paragraph_close' ||
-                this.blockquotes.length
+                this.containers.length
             ) {
                 rendered += this.EOL.repeat(2);
             } else {
@@ -26,7 +26,7 @@ const html: Renderer.RenderRuleRecord = {
         }
 
         for (const line of content.trimEnd().split('\n')) {
-            rendered += this.renderBlockquote(tokens[i]) + line + this.EOL;
+            rendered += this.renderContainer(tokens[i]) + line + this.EOL;
         }
 
         rendered = rendered.trimEnd();
