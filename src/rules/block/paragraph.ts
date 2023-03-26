@@ -28,11 +28,7 @@ const paragraph: Renderer.RenderRuleRecord = {
         // receive previous token
         // in case of being inside blockquote we want to examine
         // token that comes right before blockquote_open token
-        let previous = tokens[i - 1];
-        if (this.blockquotes.length && this.pending.length) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            previous = this.pending.pop()!;
-        }
+        const previous = tokens[i - 1];
         if (!previous) {
             throw new Error('failed to rendrer paragraphi');
         }
@@ -48,31 +44,19 @@ const paragraph: Renderer.RenderRuleRecord = {
                 rendered += this.EOL;
             }
 
-            let prevDepth = previous.attrGet('blockquotesDepth');
-            if (!prevDepth) {
-                prevDepth = String('0');
-            }
-
-            const parsedPrevDepth = parseInt(prevDepth, 10);
-            const currentDepth = this.blockquotes.length;
-
-            if (parsedPrevDepth === currentDepth || separate.has(previous.type)) {
+            if (separate.has(previous.type)) {
                 rendered += this.EOL;
-                rendered += this.renderBlockquote(current);
+                rendered += this.renderContainer(current);
             }
+
             rendered += this.EOL;
         }
 
-        rendered += this.renderBlockquote(current);
+        rendered += this.renderContainer(current);
 
         return rendered;
     },
-    paragraph_close: function (this: MarkdownRenderer, tokens: Token[], i: number) {
-        // mark paragraph with its blockquotes depth
-        if (this.blockquotes.length) {
-            tokens[i].attrSet('blockquotesDepth', String(this.blockquotes.length));
-        }
-
+    paragraph_close: function (this: MarkdownRenderer) {
         return '';
     },
 };

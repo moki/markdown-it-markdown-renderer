@@ -65,7 +65,6 @@ exports[`markdown semantics Block quotes 237 1`] = `
 "> \`\`\`
 > \`\`\`
 
-
 foo
 \`\`\`
 \`\`\`"
@@ -94,13 +93,11 @@ exports[`markdown semantics Block quotes 244 1`] = `
 exports[`markdown semantics Block quotes 248 1`] = `
 "> bar
 
-
 baz"
 `;
 
 exports[`markdown semantics Block quotes 249 1`] = `
 "> bar
-
 
 baz"
 `;
@@ -159,7 +156,6 @@ exports[`markdown semantics Fenced code blocks 128 1`] = `
 "> \`\`\`
 > aaa
 > \`\`\`
-
 
 bbb"
 `;
@@ -236,7 +232,6 @@ exports[`markdown semantics HTML blocks 174 1`] = `
 "
 > <div>
 > foo
-
 
 bar"
 `;
