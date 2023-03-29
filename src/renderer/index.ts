@@ -53,9 +53,6 @@ class MarkdownRenderer<T = {}, CT extends ContainerBase = ContainerBase> extends
     // space used by renderer
     protected SPACE: string;
 
-    // pending tokens stack
-    protected pending: Token[];
-
     // containers
     protected containers: Array<Container<CT>>;
     protected containerRenderers: Array<ContainerRenderer<CT>>;
@@ -75,7 +72,6 @@ class MarkdownRenderer<T = {}, CT extends ContainerBase = ContainerBase> extends
         this.EOL = EOL;
         this.SPACE = SPACE;
 
-        this.pending = [];
         this.containers = new Array<Container<CT>>();
 
         this.containerRenderers = [
