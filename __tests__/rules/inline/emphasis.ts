@@ -28,7 +28,7 @@ describe('em_open', () => {
     });
 
     it('render em_open token as *', () => {
-        const renderer = new MarkdownRenderer({customRules: {...emphasis}});
+        const renderer = new MarkdownRenderer({rules: {...emphasis}});
 
         const expected = '*';
         const tokens = [{type: 'em_open', markup: '*'}] as Token[];
@@ -63,7 +63,7 @@ describe('em_close', () => {
     });
 
     it('render em_close token as *', () => {
-        const renderer = new MarkdownRenderer({customRules: {...emphasis}});
+        const renderer = new MarkdownRenderer({rules: {...emphasis}});
 
         const expected = '*';
         const tokens = [{type: 'em_close', markup: '*'}] as Token[];
@@ -98,7 +98,7 @@ describe('strong_open', () => {
     });
 
     it('render strong_open token as **', () => {
-        const renderer = new MarkdownRenderer({customRules: {...emphasis}});
+        const renderer = new MarkdownRenderer({rules: {...emphasis}});
 
         const expected = '**';
         const tokens = [{type: 'strong_open', markup: '**'}] as Token[];
@@ -133,7 +133,7 @@ describe('strong_close', () => {
     });
 
     it('render strong_close token as **', () => {
-        const renderer = new MarkdownRenderer({customRules: {...emphasis}});
+        const renderer = new MarkdownRenderer({rules: {...emphasis}});
 
         const expected = '**';
         const tokens = [{type: 'strong_close', markup: '**'}] as Token[];

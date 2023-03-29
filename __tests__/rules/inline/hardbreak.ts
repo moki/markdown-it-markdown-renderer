@@ -26,7 +26,7 @@ describe('hardbreak', () => {
     });
 
     it('renders backslash followed by newline', () => {
-        const renderer = new MarkdownRenderer({customRules: {...hardbreak}});
+        const renderer = new MarkdownRenderer({rules: {...hardbreak}});
 
         const tokens = [{type: 'hardbreak'}] as Token[];
         const actual = renderer.render(tokens, {}, {});
