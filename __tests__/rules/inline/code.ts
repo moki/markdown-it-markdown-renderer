@@ -30,7 +30,7 @@ describe('code_inline', () => {
     });
 
     it('render content wrapped in "`" markup for code_inline token', () => {
-        const renderer = new MarkdownRenderer({customRules: {...code}});
+        const renderer = new MarkdownRenderer({rules: {...code}});
 
         const markup = '```';
         const content = 'console.log("text");';

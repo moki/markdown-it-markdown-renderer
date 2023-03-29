@@ -1,7 +1,7 @@
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {link} from 'src/rules/inline/link';
+import {link, initState} from 'src/rules/inline/link';
 
 describe('link_open', () => {
     it('is named link_open', () => {
@@ -11,7 +11,7 @@ describe('link_open', () => {
     });
 
     it('returns [ for link_open tag', () => {
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
 
         let handler = link.link_open;
         if (!handler) {
@@ -30,7 +30,7 @@ describe('link_open', () => {
     });
 
     it('puts link_open token onto pending stack', () => {
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
 
         let handler = link.link_open;
         if (!handler) {
@@ -44,12 +44,12 @@ describe('link_open', () => {
 
         handler(tokens, 0, {}, {}, renderer);
 
-        const pending = renderer['pending'].pop();
+        const pending = renderer['state']['link']['pending'].pop();
         expect(pending).toStrictEqual(open);
     });
 
     it('takes link_open token from pending stack when handling link_close', () => {
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
 
         let handler = link.link_close;
         if (!handler) {
@@ -60,14 +60,14 @@ describe('link_open', () => {
 
         const open = new Token('link_open', '', 0);
 
-        renderer['pending'].push(open);
+        renderer['state']['link']['pending'].push(open);
 
         const close = new Token('link_close', '', 0);
         const tokens = [close] as Token[];
 
         handler(tokens, 0, {}, {}, renderer);
 
-        expect(renderer['pending']).toHaveLength(0);
+        expect(renderer['state']['link']['pending']).toHaveLength(0);
     });
 });
 
@@ -79,7 +79,7 @@ describe('link_close', () => {
     });
 
     it('returns ] and (url[ "title"]) for link_close tag', () => {
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
 
         let handler = link.link_close;
         if (!handler) {
@@ -97,7 +97,7 @@ describe('link_close', () => {
 
         const expected = `](${href} "${title}")`;
 
-        renderer['pending'].push(open);
+        renderer['state']['link']['pending'].push(open);
 
         const close = new Token('link_close', '', 0);
         const tokens = [close] as Token[];
@@ -118,7 +118,7 @@ describe('link', () => {
         const close = new Token('link_close', '', 0);
         const tokens = [open, close];
 
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
         const expected = `[](${href} "${title}")`;
         const actual = renderer.render(tokens, {}, {});
 
@@ -135,7 +135,7 @@ describe('link', () => {
         const close = new Token('link_close', '', 0);
         const tokens = [open, close];
 
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
 
         const expected = `[](${href} '${title}')`;
         const actual = renderer.render(tokens, {}, {});
@@ -151,7 +151,7 @@ describe('link', () => {
         const close = new Token('link_close', '', 0);
         const tokens = [open, close];
 
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
         const expected = `[](${href})`;
         const actual = renderer.render(tokens, {}, {});
 
@@ -163,7 +163,7 @@ describe('link', () => {
         const close = new Token('link_close', '', 0);
         const tokens = [open, close];
 
-        const renderer = new MarkdownRenderer({customRules: {...link}});
+        const renderer = new MarkdownRenderer({rules: {...link}, initState});
         const expected = `[]()`;
         const actual = renderer.render(tokens, {}, {});
 

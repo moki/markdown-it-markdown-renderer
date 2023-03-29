@@ -26,7 +26,7 @@ describe('text', () => {
     });
 
     it('renders given token content', () => {
-        const renderer = new MarkdownRenderer({customRules: {...text}});
+        const renderer = new MarkdownRenderer({rules: {...text}});
 
         const expected = 'some text';
         const tokens = [{type: 'text', content: expected}] as Token[];

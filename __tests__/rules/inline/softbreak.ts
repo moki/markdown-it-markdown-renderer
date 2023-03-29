@@ -27,7 +27,7 @@ describe('softbreak', () => {
     });
 
     it('renders newline', () => {
-        const renderer = new MarkdownRenderer({customRules: {...softbreak}});
+        const renderer = new MarkdownRenderer({rules: {...softbreak}});
 
         const tokens = [{type: 'softbreak'}] as Token[];
         const actual = renderer.render(tokens, {}, {});

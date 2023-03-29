@@ -1,7 +1,7 @@
 import {MarkdownRenderer} from 'src/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {image} from 'src/rules/inline/image';
+import {image, initState} from 'src/rules/inline/image';
 
 describe('image', () => {
     it('is named image', () => {
@@ -11,7 +11,8 @@ describe('image', () => {
     });
 
     it('puts image token onto pending stack', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        // const renderer = new MarkdownRenderer({rules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
         const spy = jest.spyOn(renderer, 'renderInline').mockImplementation(() => '');
 
         let handler = image.image;
@@ -26,7 +27,7 @@ describe('image', () => {
 
         handler(tokens, 0, {}, {}, renderer);
 
-        const pending = renderer['pending'].pop();
+        const pending = renderer['state']['image']['pending'].pop();
 
         expect(pending).toStrictEqual(img);
 
@@ -34,7 +35,7 @@ describe('image', () => {
     });
 
     it('calls renderInline with image_open, image.children, image_close tokens', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
         const spy = jest.spyOn(renderer, 'renderInline');
 
         let handler = image.image;
@@ -69,7 +70,7 @@ describe('image_open', () => {
     });
 
     it('returns ![ for image_open token', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         let handler = image.image_open;
         if (!handler) {
@@ -96,7 +97,7 @@ describe('image_close', () => {
     });
 
     it('takes image token from stack', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         let handler = image.image_close;
         if (!handler) {
@@ -109,18 +110,18 @@ describe('image_close', () => {
         const children = [];
         img.children = children;
 
-        renderer['pending'].push(img);
+        renderer['state']['image']['pending'].push(img);
 
         const close = new Token('image_close', '', 0);
         const tokens = [close];
 
         handler(tokens, 0, {}, {}, renderer);
 
-        expect(renderer['pending']).toHaveLength(0);
+        expect(renderer['state']['image']['pending']).toHaveLength(0);
     });
 
     it('return ] and (src[ "title"]) for image_close tag', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         let handler = image.image_close;
         if (!handler) {
@@ -139,7 +140,7 @@ describe('image_close', () => {
         img.attrSet('src', src);
         img.attrSet('title', title);
 
-        renderer['pending'].push(img);
+        renderer['state']['image']['pending'].push(img);
 
         const expected = `](${src} "${title}")`;
 
@@ -151,7 +152,7 @@ describe('image_close', () => {
 
 describe('image', () => {
     it('renders image with src and title', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         const img = new Token('image', '', 0);
         const src = 'folder/image.png';
@@ -169,7 +170,7 @@ describe('image', () => {
     });
 
     it('renders image with \' as title markup if title contains "', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         const img = new Token('image', '', 0);
         const src = 'folder/image.png';
@@ -186,7 +187,7 @@ describe('image', () => {
     });
 
     it('render image with src', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         const img = new Token('image', '', 0);
         const src = 'folder/image.png';
@@ -201,7 +202,7 @@ describe('image', () => {
     });
 
     it('render empty image', () => {
-        const renderer = new MarkdownRenderer({customRules: {...image}});
+        const renderer = new MarkdownRenderer({rules: {...image}, initState});
 
         const img = new Token('image', '', 0);
 
