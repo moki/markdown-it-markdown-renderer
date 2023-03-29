@@ -73,5 +73,9 @@ const code: Renderer.RenderRuleRecord = {
     },
 };
 
-export {code};
-export default {code};
+function isCode(token: Token) {
+    return token.type === 'code_block';
+}
+
+export {code, isCode};
+export default {code, isCode};

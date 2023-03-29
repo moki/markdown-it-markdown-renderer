@@ -1,4 +1,5 @@
 import type MarkdownIt from 'markdown-it';
+
 import {MarkdownRenderer, MarkdownRendererParams} from 'src/renderer';
 
 // helpers
@@ -15,7 +16,11 @@ function mdRenderer(parser: MarkdownIt, parameters?: MarkdownRendererParams) {
     // disable links normalization
     parser.normalizeLink = id;
 
-    const renderer = new MarkdownRenderer(parameters);
+    const options = {
+        ...parameters,
+    };
+
+    const renderer = new MarkdownRenderer(options);
 
     // @ts-ignore
     parser.renderer = renderer;

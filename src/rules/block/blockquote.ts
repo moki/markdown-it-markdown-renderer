@@ -2,22 +2,12 @@ import {Options} from 'markdown-it';
 import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {MarkdownRenderer, MarkdownRendererEnv, Container} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
+import {consumeList, isList} from './list';
 
-import {consumeList} from './list';
+import {isFst, isTail, isEmpty, Container, ContainerBase} from 'src/rules/block/containers';
 
-export function consumeBlockquote(line: string, i: number, blockquote: Container) {
-    let cursor = i ?? 0;
-
-    const index = line.indexOf(blockquote.markup, cursor);
-    if (index === -1) {
-        throw new Error('failed to spin');
-    }
-
-    cursor = index + 1;
-
-    return cursor;
-}
+export type ContainerBlockquote = ContainerBase & {type: 'blockquote_open'};
 
 const blockquote: Renderer.RenderRuleRecord = {
     blockquote_open: function (
@@ -44,19 +34,16 @@ const blockquote: Renderer.RenderRuleRecord = {
         }
 
         // consume parsed containers constructs from this line
-        // const nesting = this.containers.length;
-
         let j = 0;
-
-        for (const quote of this.containers) {
-            if (quote.type === 'list' && quote.row === start) {
-                j = consumeList(line, j, quote);
+        for (const container of this.containers) {
+            if (isList(container) && container.row === start) {
+                j = consumeList(line, j, container);
 
                 continue;
             }
 
-            if (quote.type === 'blockquote' && quote.row === start) {
-                j = consumeBlockquote(line, j, quote);
+            if (isBlockquote(container) && container.row === start) {
+                j = consumeBlockquote(line, j, container);
             }
         }
 
@@ -73,7 +60,7 @@ const blockquote: Renderer.RenderRuleRecord = {
         for (j = col + 1; line.charAt(j) === ' ' && j < line.length; j++);
 
         this.containers.push({
-            type: 'blockquote',
+            type: tokens[i].type,
             lspaces: 0,
             tspaces: j - col - 1,
             row: start,
@@ -83,7 +70,7 @@ const blockquote: Renderer.RenderRuleRecord = {
         });
 
         // prevent containers from sticking to each other
-        return i && tokens[i - 1].type === 'blockquote_close' ? this.EOL : '';
+        return i && isBlockquoteClose(tokens[i - 1]) ? this.EOL : '';
     },
     blockquote_close: function (this: MarkdownRenderer, tokens: Token[], i: number) {
         let rendered = '';
@@ -100,5 +87,89 @@ const blockquote: Renderer.RenderRuleRecord = {
     },
 };
 
-export {blockquote};
-export default {blockquote};
+function consumeBlockquote(line: string, i: number, container: Container<ContainerBase>) {
+    let cursor = i ?? 0;
+
+    const index = line.indexOf(container.markup, cursor);
+    if (index === -1) {
+        throw new Error('failed to spin');
+    }
+
+    cursor = index + 1;
+
+    return cursor;
+}
+
+function isBlockquote(token: Token | Container<ContainerBase>) {
+    return token.type === 'blockquote_open';
+}
+
+function isBlockquoteClose(token: Token | Container<ContainerBase>) {
+    return token.type === 'blockquote_close';
+}
+
+function renderEmptyBlockquote<CT extends ContainerBase>(
+    this: MarkdownRenderer,
+    containers: Container<CT>[],
+    i: number,
+    caller: Token,
+) {
+    const container = containers[i];
+    let rendered = '';
+
+    if (isBlockquoteClose(caller) && !container.rendered) {
+        rendered += this.EOL;
+        rendered += container.markup;
+    }
+
+    return rendered;
+}
+
+function renderBlockquote<CT extends ContainerBase>(
+    this: MarkdownRenderer,
+    containers: Container<CT>[],
+    i: number,
+    caller: Token,
+) {
+    const container = containers[i];
+    let rendered = '';
+
+    const empty = isBlockquoteClose(caller) && !container.rendered;
+
+    if (isBlockquote(container) && !empty) {
+        if (isFst(container, caller)) {
+            // console.info('blockquote fst');
+            rendered += container.markup;
+            rendered += this.SPACE.repeat(container.tspaces);
+        } else if (isTail(container, caller)) {
+            // console.info('blockquote tail');
+            rendered += container.markup;
+            rendered += this.SPACE.repeat(container.tspaces);
+            // first line empty blockquote
+        } else if (isEmpty(container) && !container.rendered) {
+            rendered += container.markup;
+            rendered += this.EOL;
+        } else {
+            throw new Error('blockquote not fast not tail - undefined behaviour');
+        }
+    }
+
+    return rendered;
+}
+
+export {
+    blockquote,
+    consumeBlockquote,
+    isBlockquote,
+    isBlockquoteClose,
+    renderEmptyBlockquote,
+    renderBlockquote,
+};
+export default {
+    blockquote,
+    consumeBlockquote,
+    isBlockquote,
+    isBlockquoteClose,
+    renderEmptyBlockquote,
+    renderBlockquote,
+};

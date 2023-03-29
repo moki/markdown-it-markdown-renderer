@@ -2,27 +2,22 @@ import {Options} from 'markdown-it';
 import Renderer from 'markdown-it/lib/renderer';
 import Token from 'markdown-it/lib/token';
 
-import {consumeBlockquote} from './blockquote';
+import {consumeBlockquote, isBlockquote} from './blockquote';
 
-import {MarkdownRenderer, MarkdownRendererEnv, Container, isListType} from 'src/renderer';
+import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
 
-// export function consumeList(line: string, i: number, blockquote: Container, row: number) {
-export function consumeList(line: string, i: number, blockquote: Container) {
-    const cursor = i;
+import {isCode} from 'src/rules/block/code';
+import {isFst, isTail, isEmpty, Container, ContainerBase} from 'src/rules/block/containers';
 
-    const col = line.indexOf(blockquote.markup, cursor);
-    if (col === -1) {
-        throw new Error('failed to render list');
-    }
+export type ContainerOrderedList = ContainerBase & {type: 'ordered_list_open'; order: number};
 
-    return col;
-}
+export type ContainerUnorderedList = ContainerBase & {type: 'bullet_list_open'};
 
 const list: Renderer.RenderRuleRecord = {
-    bullet_list_open: listOpen,
-    bullet_list_close: listClose,
-    ordered_list_open: listOpen,
-    ordered_list_close: listClose,
+    bullet_list_open: () => '',
+    bullet_list_close: () => '',
+    ordered_list_open: () => '',
+    ordered_list_close: () => '',
     list_item_open: listItemOpen,
     list_item_close: listItemClose,
 };
@@ -53,15 +48,14 @@ function listItemOpen(
 
     let j = 0;
 
-    for (const quote of this.containers) {
-        if (quote.type === 'blockquote') {
-            j = consumeBlockquote(line, j, quote);
-        } else if (quote.type === 'list') {
-            if (quote.row === start) {
-                // j = consumeList(line, j, quote, start);
-                j = consumeList(line, j, quote);
+    for (const container of this.containers) {
+        if (isBlockquote(container)) {
+            j = consumeBlockquote(line, j, container);
+        } else if (isList(container)) {
+            if (container.row === start) {
+                j = consumeList(line, j, container);
             } else {
-                j = quote.col + quote.markup.length + quote.tspaces;
+                j = container.col + container.markup.length + container.tspaces;
             }
         }
     }
@@ -82,10 +76,7 @@ function listItemOpen(
 
     let tspaces = j - col - 1;
 
-    const listType = this.lists[this.lists.length - 1]?.type;
-    if (!listType?.length || !isListType(listType)) {
-        throw new Error('failed to render list');
-    }
+    const listType = parseListType(tokens, i);
 
     let empty = line.slice(col).trimEnd().endsWith(markup);
 
@@ -101,7 +92,6 @@ function listItemOpen(
         let [next] = source.slice(start + 1, start + 2);
         if (!next?.length) {
             next = '';
-            // throw new Error('failed to render unordered list');
         }
 
         for (j = 0; next.charAt(j) === ' ' && j < next.length; j++);
@@ -109,11 +99,10 @@ function listItemOpen(
         tspaces = j;
     }
 
-    const parsed: Container = {
+    const parsed = {
         rendered: false,
-        type: 'list',
+        type: listType,
         row: start,
-        listType,
         col,
         lspaces,
         tspaces,
@@ -121,7 +110,7 @@ function listItemOpen(
         empty,
     };
 
-    if (listType === 'ordered_list_open') {
+    if (isOrderedList(parsed)) {
         const match = line.match(/(\d+)(?:\.|\)\s+|$)/);
         // eslint-disable-next-line eqeqeq, no-eq-null
         if (!match || match.index == null || match[1] == null) {
@@ -134,12 +123,53 @@ function listItemOpen(
             throw new Error('failed to render list');
         }
 
-        parsed.order = order;
+        (parsed as ContainerOrderedList).order = order;
     }
 
     this.containers.push(parsed);
 
     return '';
+}
+
+function consumeList(line: string, i: number, container: Container<ContainerBase>) {
+    const cursor = i;
+
+    const col = line.indexOf(container.markup, cursor);
+    if (col === -1) {
+        throw new Error('failed to render list');
+    }
+
+    return col;
+}
+
+function parseListType(tokens: Token[], i: number) {
+    let cursor = i;
+
+    while (cursor-- >= 0) {
+        if (isList(tokens[cursor])) {
+            return tokens[cursor].type as
+                | ContainerOrderedList['type']
+                | ContainerUnorderedList['type'];
+        }
+    }
+
+    throw new Error('failed to parse list type');
+}
+
+function isList(token: Token | Container<ContainerBase>) {
+    return isOrderedList(token) || isUnorderedList(token);
+}
+
+function isOrderedList(token: Token | Container<ContainerBase>) {
+    return token?.type === 'ordered_list_open';
+}
+
+function isUnorderedList(token: Token | Container<ContainerBase>) {
+    return token?.type === 'bullet_list_open';
+}
+
+function isListItemClose(token: Token) {
+    return token?.type === 'list_item_close';
 }
 
 function listItemClose(this: MarkdownRenderer, tokens: Token[], i: number) {
@@ -156,20 +186,188 @@ function listItemClose(this: MarkdownRenderer, tokens: Token[], i: number) {
     return rendered;
 }
 
-function listOpen(this: MarkdownRenderer, tokens: Token[], i: number) {
-    // remember list openping token
-    // helps make decisions during list item parsing
-    this.lists.push(tokens[i]);
+function renderEmptyListItem<CT extends ContainerBase>(
+    this: MarkdownRenderer,
+    containers: Container<CT>[],
+    i: number,
+    caller: Token,
+) {
+    const container = containers[i];
+    let rendered = '';
 
-    return '';
+    if (isListItemClose(caller) && !container.rendered) {
+        if (isOrderedList(container) && isContainerOrderedList(container)) {
+            rendered += this.EOL;
+            rendered += container.order;
+            rendered += container.markup;
+        } else if (isUnorderedList(container)) {
+            rendered += this.EOL;
+            rendered += container.markup;
+        } else {
+            throw new Error('empty list not ordered and not unordered');
+        }
+    }
+
+    return rendered;
 }
 
-function listClose(this: MarkdownRenderer) {
-    // forget list openping token
-    this.lists.pop();
+function renderOrderedList<CT extends ContainerBase>(
+    this: MarkdownRenderer,
+    containers: Container<CT>[],
+    i: number,
+    caller: Token,
+) {
+    const container = containers[i];
 
-    return '';
+    let rendered = '';
+
+    const empty = isListItemClose(caller) && !container.rendered;
+
+    if (isOrderedList(container) && !empty && isContainerOrderedList(container)) {
+        if (isFst(container, caller) && !isEmpty(container)) {
+            // console.info('ordered fst');
+
+            let codeIndent = 0;
+            if (isCode(caller) && !isEmpty(container)) {
+                const codeFstLine = caller.content.split('\n')[0] ?? '';
+
+                codeIndent = codeFstLine.length - codeFstLine.trim().length;
+            }
+
+            rendered += container.order;
+            rendered += container.markup;
+            rendered += this.SPACE.repeat(container.tspaces - codeIndent);
+
+            if (isCode(caller) && !isEmpty(container)) {
+                // console.info('ordered fst code_block not empty');
+
+                this.containers[i].tspaces = this.containers[i].tspaces - 4 - codeIndent;
+            }
+        } else if (isTail(container, caller)) {
+            // console.info('ordered tail');
+            let indentation = 0;
+
+            const orderLen = `${container.order}`.length;
+
+            // indent with spaces of length of the markup and order string
+            // but only in the case of the content going on the new line
+            // after list open
+            if (!isEmpty(container)) {
+                indentation += orderLen;
+                indentation += container.markup.length;
+            }
+
+            indentation += container.tspaces;
+
+            if (isCode(caller)) {
+                indentation += 4;
+            }
+
+            rendered += this.SPACE.repeat(indentation);
+            // first line was empty
+            // render empty open markup new line and indentation
+        } else if (isEmpty(container) && !container.rendered) {
+            // console.info('ordered empty fst');
+            rendered += container.order;
+            rendered += container.markup;
+            rendered += this.EOL;
+
+            let indentation = 0;
+
+            indentation += container.tspaces;
+
+            rendered += this.SPACE.repeat(indentation);
+        } else {
+            throw new Error('ordered list not fst not tail - undefined behaviour');
+        }
+    }
+
+    return rendered;
 }
 
-export {list};
-export default {list};
+function renderUnorderedList<CT extends ContainerBase>(
+    this: MarkdownRenderer,
+    containers: Container<CT>[],
+    i: number,
+    caller: Token,
+) {
+    const container = containers[i];
+    let rendered = '';
+
+    const empty = isListItemClose(caller) && !container.rendered;
+
+    if (isUnorderedList(container) && !empty) {
+        if (isFst(container, caller) && !isEmpty(container)) {
+            // console.info('unordered fst not empty');
+            rendered += container.markup;
+            rendered += this.SPACE.repeat(container.tspaces);
+        } else if (isTail(container, caller)) {
+            // console.info('unordered tail');
+            let indentation = 0;
+
+            // indent with spaces of length of the markup
+            // but only in the case of the content going on the new line
+            // after list open
+            if (!isEmpty(container)) {
+                indentation += container.markup.length;
+            }
+
+            if (isCode(caller)) {
+                indentation += 4;
+            }
+
+            indentation += container.tspaces;
+
+            rendered += this.SPACE.repeat(indentation);
+
+            // first line was empty
+            // render empty open markup new line and indentation
+        } else if (isEmpty(container) && !container.rendered) {
+            // console.info('empty fst');
+            rendered += container.markup;
+            rendered += this.EOL;
+
+            let indentation = 0;
+
+            indentation += container.tspaces;
+
+            rendered += this.SPACE.repeat(indentation);
+        } else {
+            throw new Error('unordered list not fst not tail - undefined behaviour');
+        }
+    }
+
+    return rendered;
+}
+
+function isContainerOrderedList(
+    container: ContainerBase & Record<string, unknown>,
+): container is ContainerOrderedList {
+    return container.order !== undefined;
+}
+
+export {
+    list,
+    consumeList,
+    isList,
+    isOrderedList,
+    isUnorderedList,
+    isListItemClose,
+    isContainerOrderedList,
+    renderEmptyListItem,
+    renderUnorderedList,
+    renderOrderedList,
+};
+
+export default {
+    list,
+    consumeList,
+    isList,
+    isOrderedList,
+    isUnorderedList,
+    isListItemClose,
+    isContainerOrderedList,
+    renderEmptyListItem,
+    renderUnorderedList,
+    renderOrderedList,
+};
