@@ -14,6 +14,10 @@ import {
     ContainerBase,
 } from 'src/rules/block/containers';
 
+import heading, {HeadingState} from 'src/rules/block/heading';
+import image, {ImageState} from 'src/rules/inline/image';
+import link, {LinkState} from 'src/rules/inline/link';
+
 import {NEW_LINE, ONE_SPACE} from './constants';
 
 export const MarkdownRendererMode = CustomRendererMode;
@@ -37,6 +41,14 @@ export type MarkdownRendererEnv = {
     source?: string[];
 };
 
+export type State = HeadingState & ImageState & LinkState;
+
+const initRulesState = () => ({
+    ...heading.initState(),
+    ...image.initState(),
+    ...link.initState(),
+});
+
 class MarkdownRenderer<T = {}, CT extends ContainerBase = ContainerBase> extends CustomRenderer<T> {
     static defaultRules: Renderer.RenderRuleRecord = {...inline, ...block};
     static defaultContainerRenderers: Array<ContainerRenderer<ContainerBase>> = [
@@ -59,7 +71,7 @@ class MarkdownRenderer<T = {}, CT extends ContainerBase = ContainerBase> extends
 
     constructor(params: MarkdownRendererParams<T, CT> = {}) {
         const {
-            initState,
+            initState = () => ({}),
             handlers,
             rules,
             containerRenderers = [],
@@ -67,7 +79,12 @@ class MarkdownRenderer<T = {}, CT extends ContainerBase = ContainerBase> extends
             constants: {EOL = NEW_LINE, SPACE = ONE_SPACE} = {},
         } = params;
 
-        super({rules: {...MarkdownRenderer.defaultRules, ...rules}, handlers, initState, mode});
+        super({
+            rules: {...MarkdownRenderer.defaultRules, ...rules},
+            handlers,
+            initState: () => ({...(initState() as T), ...initRulesState()}),
+            mode,
+        });
 
         this.EOL = EOL;
         this.SPACE = SPACE;
