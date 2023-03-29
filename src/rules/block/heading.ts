@@ -3,8 +3,20 @@ import Token from 'markdown-it/lib/token';
 
 import {MarkdownRenderer, MarkdownRendererEnv} from 'src/renderer';
 
+export type HeadingState = {
+    heading: {
+        pending: Array<Token>;
+    };
+};
+
+const initState = () => ({
+    heading: {
+        pending: new Array<Token>(),
+    },
+});
+
 const heading: Renderer.RenderRuleRecord = {
-    heading_open: function (this: MarkdownRenderer, tokens: Token[], i: number) {
+    heading_open: function (this: MarkdownRenderer<HeadingState>, tokens: Token[], i: number) {
         const {markup} = tokens[i];
 
         let rendered = '';
@@ -22,7 +34,7 @@ const heading: Renderer.RenderRuleRecord = {
             return rendered;
         }
 
-        this.pending.push(tokens[i]);
+        this.state.heading.pending.push(tokens[i]);
 
         const previous = tokens[i - 1];
         if (previous?.type === 'paragraph_close') {
@@ -31,14 +43,15 @@ const heading: Renderer.RenderRuleRecord = {
 
         return rendered;
     },
-    heading_close: function (this: MarkdownRenderer, ...args) {
+    heading_close: function (this: MarkdownRenderer<HeadingState>, ...args) {
         const {
             3: {source},
         }: {3: MarkdownRendererEnv} = args;
 
         // no mappings avaialbe for the heading_open
         // or markdown source wasn't provided via environment
-        const open = this.pending.pop();
+        const open = this.state.heading.pending.pop();
+
         if (!open?.map || !source?.length) {
             return '';
         }
@@ -57,5 +70,5 @@ function isSetexHeading(token: Token) {
     return markup.indexOf('=') !== -1 || markup.indexOf('-') !== -1;
 }
 
-export {heading};
-export default {heading};
+export {heading, initState};
+export default {heading, initState};
