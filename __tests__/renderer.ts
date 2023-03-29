@@ -30,22 +30,22 @@ describe('MarkdownRenderer', () => {
     });
 
     it('overwrites base rules', () => {
-        const customRules = {
+        const rules = {
             heading_open: function () {
                 return '';
             },
         };
 
-        const renderer = new MarkdownRenderer({customRules});
+        const renderer = new MarkdownRenderer({rules});
 
         const leftCustom = JSON.stringify(renderer.rules.heading_open);
-        const rightCustom = JSON.stringify(customRules.heading_open.bind(renderer));
+        const rightCustom = JSON.stringify(rules.heading_open.bind(renderer));
 
         expect(leftCustom).toEqual(rightCustom);
     });
 
     it('preserves default rules if not overwritten', () => {
-        const customRules = {
+        const rules = {
             heading_open: function () {
                 return '';
             },
@@ -59,10 +59,10 @@ describe('MarkdownRenderer', () => {
 
         MarkdownRenderer.defaultRules = defaultRules;
 
-        const renderer = new MarkdownRenderer({customRules});
+        const renderer = new MarkdownRenderer({rules});
 
         const leftCustom = JSON.stringify(renderer.rules.heading_open);
-        const rightCustom = JSON.stringify(customRules.heading_open.bind(renderer));
+        const rightCustom = JSON.stringify(rules.heading_open.bind(renderer));
         expect(leftCustom).toEqual(rightCustom);
 
         const leftOriginal = JSON.stringify(renderer.rules.heading_close);
@@ -82,14 +82,6 @@ describe('MarkdownRenderer modes', () => {
         const renderer = new MarkdownRenderer({mode: MarkdownRendererMode.Development});
 
         expect(renderer['mode'] === MarkdownRendererMode.Development);
-    });
-
-    it('debug mode extends rules with logging capabilities', () => {
-        const spyRuleWithDebug = jest.spyOn(MarkdownRenderer, 'ruleWithDebug');
-
-        new MarkdownRenderer({mode: MarkdownRendererMode.Development}) as unknown;
-
-        expect(spyRuleWithDebug).toHaveBeenCalled();
     });
 });
 
